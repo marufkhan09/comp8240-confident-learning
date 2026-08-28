@@ -1,0 +1,17 @@
+cleanlab version: 2.9.0
+
+Dataset: 3000 samples, 5 classes
+Injected label errors: 600 (20% of dataset)
+cleanlab flagged: 1166 suspected label errors
+
+--- Results (exact ground-truth evaluation) ---
+True positives (correctly flagged noisy labels): 469
+False positives (clean labels wrongly flagged): 697
+False negatives (noisy labels missed): 131
+Precision: 0.4022
+Recall:    0.7817
+F1-score:  0.5311
+
+Actual injected noise rate:                  0.2000
+Proportion of examples flagged as issues:     0.3887
+CL confident-joint estimated noise rate:      0.5003
