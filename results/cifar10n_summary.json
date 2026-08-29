@@ -1,0 +1,22 @@
+{
+  "experiment_type": "CIFAR-10N pilot extension",
+  "label_set": "aggre_label",
+  "random_seed": 42,
+  "subset_size": 5000,
+  "image_size": 96,
+  "cross_validation_folds": 4,
+  "actual_label_errors": 466,
+  "suspected_label_issues": 1431,
+  "true_positives": 355,
+  "false_positives": 1076,
+  "false_negatives": 111,
+  "precision": 0.24807826694619148,
+  "recall": 0.7618025751072961,
+  "f1_score": 0.37427517132314186,
+  "accuracy_against_noisy_labels": 0.6634,
+  "accuracy_against_clean_labels": 0.6922,
+  "cleanlab_version": "2.9.0",
+  "scikit_learn_version": "1.9.0",
+  "pytorch_version": "2.13.0+cpu",
+  "torchvision_version": "0.28.0+cpu"
+}

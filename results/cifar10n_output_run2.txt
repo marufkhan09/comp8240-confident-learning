@@ -1,0 +1,19 @@
+Loaded cached embeddings: /workspaces/comp8240-confident-learning/data/raw/cifar10n_resnet18_n5000_size96.npz
+Generating four-fold out-of-sample probabilities...
+
+--- CIFAR-10N pilot-extension results ---
+Subset size: 5000
+Human label set: aggre_label
+Actual human-label errors: 466
+Cleanlab suspected issues: 1431
+True positives:  355
+False positives: 1076
+False negatives: 111
+Precision: 0.2481
+Recall:    0.7618
+F1-score:  0.3743
+Accuracy against noisy labels: 0.6634
+Accuracy against clean labels: 0.6922
+
+Summary saved to: /workspaces/comp8240-confident-learning/results/cifar10n_summary.json
+Predictions saved to: /workspaces/comp8240-confident-learning/results/cifar10n_predictions.csv
