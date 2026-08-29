@@ -1,0 +1,46 @@
+{
+  "constructed_dataset_name": "AGNews-CLNoise",
+  "description": "Controlled class-conditional label-noise dataset derived from AG News",
+  "source_dataset": "fancyzhx/ag_news",
+  "source_revision": "eb185aade064a813bc0b7f42de02595523103ca4",
+  "source_fingerprint": "2bc1e2be15d7f2ee",
+  "source_training_examples": 120000,
+  "subset_size": 10000,
+  "random_seed": 42,
+  "class_names": [
+    "World",
+    "Sports",
+    "Business",
+    "Sci/Tech"
+  ],
+  "clean_class_counts": [
+    2500,
+    2500,
+    2500,
+    2500
+  ],
+  "noise_type": "fixed cyclic class-conditional asymmetric noise",
+  "label_transitions": {
+    "World": "Sports",
+    "Sports": "Business",
+    "Business": "Sci/Tech",
+    "Sci/Tech": "World"
+  },
+  "noise_rate": 0.2,
+  "errors_per_class": 500,
+  "injected_label_errors": 2000,
+  "cross_validation_folds": 4,
+  "suspected_label_issues": 2251,
+  "true_positives": 1701,
+  "false_positives": 550,
+  "false_negatives": 299,
+  "precision": 0.7556641492669924,
+  "recall": 0.8505,
+  "f1_score": 0.8002822865208186,
+  "accuracy_against_noisy_labels": 0.7045,
+  "accuracy_against_clean_labels": 0.8559,
+  "cleanlab_version": "2.9.0",
+  "datasets_version": "5.0.1",
+  "scikit_learn_version": "1.9.0",
+  "raw_text_committed": false
+}

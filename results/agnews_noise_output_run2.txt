@@ -1,0 +1,28 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+--- AGNews-CLNoise construction ---
+Source dataset: fancyzhx/ag_news
+Source revision: eb185aade064a813bc0b7f42de02595523103ca4
+Source training examples: 120000
+Constructed subset: 10000
+Clean class counts: [2500 2500 2500 2500]
+Injected errors: 2000
+Injected noise rate: 0.2000
+Errors per class: 500
+
+Generating four-fold out-of-sample TF-IDF logistic-regression probabilities...
+
+--- AGNews-CLNoise results ---
+Actual injected errors: 2000
+Cleanlab suspected issues: 2251
+True positives: 1701
+False positives: 550
+False negatives: 299
+Precision: 0.7557
+Recall:    0.8505
+F1-score:  0.8003
+Accuracy against noisy labels: 0.7045
+Accuracy against clean labels: 0.8559
+
+Manifest saved to: /workspaces/comp8240-confident-learning/data/processed/agnews_clnoise_manifest.csv
+Summary saved to: /workspaces/comp8240-confident-learning/results/agnews_noise_summary.json
+Predictions saved to: /workspaces/comp8240-confident-learning/results/agnews_noise_predictions.csv

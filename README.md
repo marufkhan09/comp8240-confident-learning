@@ -210,3 +210,72 @@ The experiment was run twice, producing identical JSON and CSV SHA-256 hashes.
 - `results/paper_artifact_comparison.csv`: method-level comparison
 - `results/paper_artifact_hashes_run1.txt`: first-run hashes
 - `results/paper_artifact_hashes_run2.txt`: repeated-run hashes
+
+
+## Self-created dataset: AGNews-CLNoise
+
+`AGNews-CLNoise` is a controlled noisy-label text dataset constructed from the AG News training split. It provides a cross-domain test of Confident Learning because the original paper's main quantitative benchmark used images, whereas this experiment uses news-topic text classification.
+
+The source dataset is:
+
+- Dataset: `fancyzhx/ag_news`
+- Revision: `eb185aade064a813bc0b7f42de02595523103ca4`
+- Training examples: 120,000
+- Classes: World, Sports, Business and Sci/Tech
+
+The Hugging Face dataset card currently lists the licence as unknown. Therefore, raw news text is downloaded into the ignored `data/raw/` directory and is not committed. The constructed manifest contains only source indices, labels and SHA-256 text hashes.
+
+### Construction method
+
+The script `scripts/agnews_noise_experiment.py`:
+
+1. Loads the pinned AG News training split.
+2. Selects a deterministic, stratified subset of 10,000 examples.
+3. Retains 2,500 examples from each of the four classes.
+4. Corrupts exactly 500 labels per class, producing 2,000 errors and a 20% noise rate.
+5. Uses fixed cyclic transitions: World to Sports, Sports to Business, Business to Sci/Tech and Sci/Tech to World.
+6. Uses four-fold cross-validation with a TF-IDF logistic-regression pipeline to produce out-of-sample probabilities.
+7. Applies Cleanlab and evaluates its decisions against the known injected errors.
+
+The cyclic transitions are an artificial reproducible stress test. They are not claimed to represent realistic human annotation behaviour.
+
+### Run the experiment
+
+```bash
+python scripts/agnews_noise_experiment.py \
+  2>&1 | tee results/agnews_noise_output.txt
+```
+
+### Results
+
+| Measure | Result |
+|---|---:|
+| Constructed examples | 10,000 |
+| Injected label errors | 2,000 |
+| Cleanlab suspected issues | 2,251 |
+| True positives | 1,701 |
+| False positives | 550 |
+| False negatives | 299 |
+| Precision | 0.7557 |
+| Recall | 0.8505 |
+| F1-score | 0.8003 |
+| Accuracy against noisy labels | 0.7045 |
+| Accuracy against clean reference labels | 0.8559 |
+
+Cleanlab recovered 1,701 of the 2,000 deliberately corrupted labels. The experiment demonstrates that the method can be executed on text-classification outputs, although broader conclusions require additional noise rates, transition structures, classifiers and random seeds.
+
+The experiment was executed twice. The constructed manifest, JSON summary and all 10,000 prediction records produced identical SHA-256 hashes.
+
+### Generated files
+
+- `data/processed/agnews_clnoise_manifest.csv`: reproducible construction manifest without raw text
+- `results/agnews_noise_output.txt`: first execution log
+- `results/agnews_noise_output_run2.txt`: repeated execution log
+- `results/agnews_noise_summary.json`: results and construction metadata
+- `results/agnews_noise_predictions.csv`: per-example prediction results
+- `results/agnews_noise_hashes_run1.txt`: first-run hashes
+- `results/agnews_noise_hashes_run2.txt`: repeated-run hashes
+
+### Limitations
+
+The original AG News labels are treated as the clean reference but may themselves contain ambiguity or mistakes. This pilot uses one subset, one random seed, one corruption rate and one artificial transition structure. Later work should include multiple seeds, several noise rates, alternative noise mechanisms and manual inspection of examples where Cleanlab disagrees with the reference label.
