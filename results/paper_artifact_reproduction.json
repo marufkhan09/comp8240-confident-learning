@@ -1,0 +1,121 @@
+{
+  "experiment": "Compatibility verification of released paper artifacts",
+  "scope_note": "This is not the paper's ten-trial Table 2 retraining.",
+  "dataset": "CIFAR-10",
+  "intended_noise_rate": 0.4,
+  "noise_matrix_sparsity": 0.6,
+  "actual_corrupted_labels": 19981,
+  "actual_noise_rate": 0.39962,
+  "examples": 50000,
+  "classes": 10,
+  "probability_source": "Authors' four-fold ResNet-50 out-of-sample predictions",
+  "released_probability_dtype": "float16",
+  "probabilities_renormalised_for_current_cleanlab": true,
+  "source_repository": "https://github.com/cgnorthcutt/confidentlearning-reproduce",
+  "source_commit": "2f3155636663eb0813363dc06cd822aae6526c34",
+  "current_cleanlab_version": "2.9.0",
+  "authors_released_masks": {
+    "argmax": {
+      "flagged": 25732,
+      "true_positives": 18012,
+      "false_positives": 7720,
+      "false_negatives": 1969,
+      "precision": 0.6999844551531167,
+      "recall": 0.9014563835643862,
+      "f1_score": 0.7880471638264827
+    },
+    "cl_pbc": {
+      "flagged": 22980,
+      "true_positives": 17069,
+      "false_positives": 5911,
+      "false_negatives": 2912,
+      "precision": 0.7427763272410792,
+      "recall": 0.8542615484710475,
+      "f1_score": 0.7946276855752893
+    },
+    "cl_pbnr": {
+      "flagged": 20748,
+      "true_positives": 16300,
+      "false_positives": 4448,
+      "false_negatives": 3681,
+      "precision": 0.7856178908810488,
+      "recall": 0.8157749862369251,
+      "f1_score": 0.8004124825063224
+    },
+    "cl_both": {
+      "flagged": 19848,
+      "true_positives": 15594,
+      "false_positives": 4254,
+      "false_negatives": 4387,
+      "precision": 0.785671100362757,
+      "recall": 0.780441419348381,
+      "f1_score": 0.7830475281829822
+    },
+    "confident_joint": {
+      "flagged": 21665,
+      "true_positives": 16710,
+      "false_positives": 4955,
+      "false_negatives": 3271,
+      "precision": 0.771290099238403,
+      "recall": 0.836294479755768,
+      "f1_score": 0.8024780291024348
+    }
+  },
+  "current_cleanlab_results": {
+    "argmax": {
+      "flagged": 25722,
+      "true_positives": 18004,
+      "false_positives": 7718,
+      "false_negatives": 1977,
+      "precision": 0.6999455718839903,
+      "recall": 0.9010560032030429,
+      "f1_score": 0.7878695052841169,
+      "mask_agreement_with_author": 0.9998,
+      "jaccard_with_author": 0.9996113788279185
+    },
+    "cl_pbc": {
+      "flagged": 22982,
+      "true_positives": 17067,
+      "false_positives": 5915,
+      "false_negatives": 2914,
+      "precision": 0.7426246627795666,
+      "recall": 0.8541614533807117,
+      "f1_score": 0.7944975909503527,
+      "mask_agreement_with_author": 0.9996,
+      "jaccard_with_author": 0.9991300943847593
+    },
+    "cl_pbnr": {
+      "flagged": 20742,
+      "true_positives": 16294,
+      "false_positives": 4448,
+      "false_negatives": 3687,
+      "precision": 0.7855558769646128,
+      "recall": 0.8154747009659177,
+      "f1_score": 0.800235739017263,
+      "mask_agreement_with_author": 0.99968,
+      "jaccard_with_author": 0.999229027128608
+    },
+    "cl_both": {
+      "flagged": 19849,
+      "true_positives": 15592,
+      "false_positives": 4257,
+      "false_negatives": 4389,
+      "precision": 0.7855307572169883,
+      "recall": 0.7803413242580451,
+      "f1_score": 0.7829274416269143,
+      "mask_agreement_with_author": 0.99946,
+      "jaccard_with_author": 0.9986406202799315
+    },
+    "confident_joint": {
+      "flagged": 20935,
+      "true_positives": 16162,
+      "false_positives": 4773,
+      "false_negatives": 3819,
+      "precision": 0.7720085980415572,
+      "recall": 0.8088684250037536,
+      "f1_score": 0.7900087985140287,
+      "mask_agreement_with_author": 0.98508,
+      "jaccard_with_author": 0.9655792922068934
+    }
+  }
+}

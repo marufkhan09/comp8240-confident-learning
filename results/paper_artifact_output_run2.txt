@@ -1,0 +1,25 @@
+--- Released configuration ---
+Examples: 50000
+Actual corrupted labels: 19981
+Actual noise rate: 0.3996
+Probability shape: (50000, 10)
+Released probability dtype: float16
+Released row-sum range: 0.986816 to 1.000000
+Source commit: 2f3155636663eb0813363dc06cd822aae6526c34
+
+--- Authors' released masks ---
+argmax           flagged=25732 P=0.7000 R=0.9015 F1=0.7880
+cl_pbc           flagged=22980 P=0.7428 R=0.8543 F1=0.7946
+cl_pbnr          flagged=20748 P=0.7856 R=0.8158 F1=0.8004
+cl_both          flagged=19848 P=0.7857 R=0.7804 F1=0.7830
+confident_joint  flagged=21665 P=0.7713 R=0.8363 F1=0.8025
+
+--- Current Cleanlab 2.9.0 ---
+argmax           flagged=25722 P=0.6999 R=0.9011 F1=0.7879 agreement=0.9998
+cl_pbc           flagged=22982 P=0.7426 R=0.8542 F1=0.7945 agreement=0.9996
+cl_pbnr          flagged=20742 P=0.7856 R=0.8155 F1=0.8002 agreement=0.9997
+cl_both          flagged=19849 P=0.7855 R=0.7803 F1=0.7829 agreement=0.9995
+confident_joint  flagged=20935 P=0.7720 R=0.8089 F1=0.7900 agreement=0.9851
+
+Summary saved to: /workspaces/comp8240-confident-learning/results/paper_artifact_reproduction.json
+Comparison saved to: /workspaces/comp8240-confident-learning/results/paper_artifact_comparison.csv

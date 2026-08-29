@@ -145,3 +145,68 @@ This is a preliminary CPU-feasible experiment using one deterministic 5,000-imag
 - `results/cifar10n_hashes_run1.txt`: first-run artifact hashes
 - `results/cifar10n_hashes_run2.txt`: repeated-run artifact hashes
 - `results/cifar10n_source_commit.txt`: exact CIFAR-10N source revision
+
+
+## Paper-artifact compatibility reproduction
+
+The script `scripts/paper_artifact_reproduction.py` uses experimental artifacts released by the Confident Learning paper's authors. The selected CIFAR-10 configuration has 40% intended synthetic label noise and 60% noise-matrix sparsity.
+
+The released artifacts include:
+
+- 50,000 four-fold out-of-sample probability vectors generated using ResNet-50.
+- Synthetic noisy labels.
+- The known clean classes encoded by the ordered image paths.
+- Label-pruning masks produced by the paper-era Cleanlab implementation.
+
+This experiment verifies the authors' released masks and separately processes the same probabilities and labels using Cleanlab 2.9.0. It is not presented as a reproduction of the paper's ten-trial Table 2 classifier-retraining results.
+
+### Obtain the authors' artifacts
+
+```bash
+mkdir -p external
+git clone --depth 1 \
+  https://github.com/cgnorthcutt/confidentlearning-reproduce.git \
+  external/confidentlearning-reproduce
+```
+
+The experiment used repository revision:
+
+```text
+2f3155636663eb0813363dc06cd822aae6526c34
+```
+
+### Run the compatibility reproduction
+
+```bash
+python scripts/paper_artifact_reproduction.py \
+  2>&1 | tee results/paper_artifact_output.txt
+```
+
+### Configuration verification
+
+The released configuration contained 50,000 examples and 19,981 corrupted labels, corresponding to an actual noise rate of 0.3996. The predicted-probability matrix had shape 50,000 by 10 and was stored using `float16`.
+
+Because float16 rounding caused some probability rows to sum to slightly less than one, the compatibility script converts the probabilities to float64 and renormalises each row before using the current Cleanlab API. The authors' released masks are evaluated without alteration.
+
+### Results
+
+| Method | Authors' mask F1 | Cleanlab 2.9 F1 | Mask agreement |
+|---|---:|---:|---:|
+| Argmax disagreement | 0.7880 | 0.7879 | 0.9998 |
+| Prune by class | 0.7946 | 0.7945 | 0.9996 |
+| Prune by noise rate | 0.8004 | 0.8002 | 0.9997 |
+| Both pruning methods | 0.7830 | 0.7829 | 0.9995 |
+| Confident joint | 0.8025 | 0.7900 | 0.9851 |
+
+Four methods produced more than 99.95% agreement between the paper-era released masks and Cleanlab 2.9.0. The confident-joint method produced 98.51% agreement. This indicates that the released artifacts remain highly compatible with the current implementation, while small version-related differences remain and should be reported rather than treated as an exact reproduction.
+
+The experiment was run twice, producing identical JSON and CSV SHA-256 hashes.
+
+### Generated files
+
+- `results/paper_artifact_output.txt`: first execution log
+- `results/paper_artifact_output_run2.txt`: repeated execution log
+- `results/paper_artifact_reproduction.json`: complete results and metadata
+- `results/paper_artifact_comparison.csv`: method-level comparison
+- `results/paper_artifact_hashes_run1.txt`: first-run hashes
+- `results/paper_artifact_hashes_run2.txt`: repeated-run hashes

@@ -1,0 +1,2 @@
+723d6cc1e68911375903b910f8de226f6ea8d44b19e4690449097b2b08b45d41  results/paper_artifact_reproduction.json
+054f45c23826a54bee4c897dfe4cfc2f15bd1f1156bcd4c987562ae2e06072a8  results/paper_artifact_comparison.csv
