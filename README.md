@@ -276,6 +276,60 @@ The experiment was executed twice. The constructed manifest, JSON summary and al
 - `results/agnews_noise_hashes_run1.txt`: first-run hashes
 - `results/agnews_noise_hashes_run2.txt`: repeated-run hashes
 
+### Controlled sensitivity study
+
+The follow-up script `scripts/agnews_noise_sweep.py` extends the pilot into a controlled sensitivity study. It keeps the same balanced 10,000-article subset and fixed four-fold assignments while varying:
+
+- noise rates of 10%, 20%, 30% and 40%;
+- cyclic class-conditional and symmetric corruption; and
+- corruption seeds 42, 43 and 44.
+
+This produces 24 runs across eight configurations. Cleanlab is compared with a simple baseline that flags an example whenever the classifier's most probable class differs from its supplied noisy label. In addition to precision, recall and F1, the study records Matthews correlation coefficient, average precision and lift over the injected-error prevalence.
+
+Run the study using:
+
+```bash
+python scripts/agnews_noise_sweep.py
+```
+
+Mean F1 over the three corruption seeds was:
+
+| Noise structure | Noise rate | Cleanlab F1 | Argmax-disagreement F1 |
+|---|---:|---:|---:|
+| Cyclic | 10% | 0.7440 | 0.6211 |
+| Cyclic | 20% | 0.8013 | 0.7349 |
+| Cyclic | 30% | 0.7753 | 0.7369 |
+| Cyclic | 40% | 0.6636 | 0.6611 |
+| Symmetric | 10% | 0.7354 | 0.6325 |
+| Symmetric | 20% | 0.8172 | 0.7733 |
+| Symmetric | 30% | 0.8504 | 0.8275 |
+| Symmetric | 40% | 0.8468 | 0.8480 |
+
+Cleanlab achieved higher mean F1 in seven of the eight configurations. The exception was 40% symmetric noise, where the simple baseline was marginally higher. Precision at larger noise rates must be interpreted alongside the increased prevalence of erroneous labels; higher precision alone does not necessarily mean that the detector has intrinsically improved.
+
+The 20%-cyclic-seed-42 configuration exactly reproduced the original pilot counts: 2,251 flags, 1,701 true positives, 550 false positives and 299 false negatives.
+
+### Preliminary semantic label review
+
+Thirty Cleanlab-flagged examples that were not deliberately corrupted in the verified 20% cyclic run were subjected to a preliminary LLM-assisted semantic review. The review judged:
+
+- 14 original labels appropriate;
+- 11 original labels likely incorrect; and
+- 5 examples genuinely ambiguous.
+
+Thus, 16 of the 30 sampled apparent false positives were considered potentially questionable. These judgements are exploratory and are not treated as independent human ground truth. Raw article text remains in the ignored `data/raw/` directory; the committed review file contains source indices, SHA-256 hashes, decisions and reasons.
+
+Additional generated files are:
+
+- `data/processed/agnews_noise_sweep_manifest.csv`
+- `data/processed/agnews_manual_annotation_key.csv`
+- `data/processed/agnews_manual_annotations.csv`
+- `results/agnews_noise_sweep_runs.csv`
+- `results/agnews_noise_sweep_aggregate.csv`
+- `results/agnews_noise_sweep_summary.json`
+- `results/agnews_noise_sweep_f1.png`
+- `results/agnews_manual_annotation_summary.json`
+
 ### Limitations
 
-The original AG News labels are treated as the clean reference but may themselves contain ambiguity or mistakes. This pilot uses one subset, one random seed, one corruption rate and one artificial transition structure. Later work should include multiple seeds, several noise rates, alternative noise mechanisms and manual inspection of examples where Cleanlab disagrees with the reference label.
+The study uses one balanced 10,000-article subset, one TF--IDF logistic-regression classifier, two artificial corruption mechanisms and three corruption seeds. Synthetic errors do not fully represent natural annotation behaviour. The published AG News labels are used as the clean reference but may themselves contain ambiguity or mistakes. The 30-case semantic review is small and LLM-assisted, so it is reported as preliminary evidence rather than definitive relabelling.

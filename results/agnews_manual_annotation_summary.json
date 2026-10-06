@@ -1,0 +1,10 @@
+{
+  "review_scope": "Thirty Cleanlab-flagged examples that were not deliberately corrupted in the 20%-cyclic-seed-42 run",
+  "review_method": "LLM-assisted batch review; preliminary semantic assessment, not independent ground truth",
+  "total_cases": 30,
+  "correct": 14,
+  "incorrect": 11,
+  "ambiguous": 5,
+  "potentially_questionable": 16,
+  "raw_text_committed": false
+}

@@ -1,0 +1,38 @@
+{
+  "experiment": "AGNews-CLNoise controlled sensitivity study",
+  "source_dataset": "fancyzhx/ag_news",
+  "source_revision": "eb185aade064a813bc0b7f42de02595523103ca4",
+  "subset_size": 10000,
+  "subset_seed": 42,
+  "fold_seed": 42,
+  "folds_fixed_across_runs": true,
+  "noise_rates": [
+    0.1,
+    0.2,
+    0.3,
+    0.4
+  ],
+  "noise_types": [
+    "cyclic",
+    "symmetric"
+  ],
+  "corruption_seeds": [
+    42,
+    43,
+    44
+  ],
+  "total_runs": 24,
+  "baseline": "argmax prediction differs from supplied noisy label",
+  "manual_review_cases": 30,
+  "cleanlab_version": "2.9.0",
+  "datasets_version": "5.0.1",
+  "scikit_learn_version": "1.9.0",
+  "raw_text_committed": false,
+  "outputs": {
+    "runs": "results/agnews_noise_sweep_runs.csv",
+    "aggregate": "results/agnews_noise_sweep_aggregate.csv",
+    "manifest": "data/processed/agnews_noise_sweep_manifest.csv",
+    "chart": "results/agnews_noise_sweep_f1.png",
+    "manual_review_key": "data/processed/agnews_manual_annotation_key.csv"
+  }
+}
