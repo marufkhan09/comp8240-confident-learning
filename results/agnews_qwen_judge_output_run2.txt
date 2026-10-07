@@ -1,0 +1,49 @@
+FORMAL AG NEWS LLM-JUDGE PILOT
+Model: Qwen/Qwen2.5-0.5B-Instruct
+Pinned revision: 7ae557604adf67be50417f59c2c2f167def9a775
+Cases: 30
+Prompts: 60
+Device: CPU
+
+Loading pinned tokenizer...
+Loading pinned model on CPU...
+  Completed 4/60 prompts
+  Completed 8/60 prompts
+  Completed 12/60 prompts
+  Completed 16/60 prompts
+  Completed 20/60 prompts
+  Completed 24/60 prompts
+  Completed 28/60 prompts
+  Completed 32/60 prompts
+  Completed 36/60 prompts
+  Completed 40/60 prompts
+  Completed 44/60 prompts
+  Completed 48/60 prompts
+  Completed 52/60 prompts
+  Completed 56/60 prompts
+  Completed 60/60 prompts
+
+FORMAL LLM-JUDGE RESULTS
+Valid outputs, pass 1: 30/30 (100.0%)
+Valid outputs, pass 2: 30/30 (100.0%)
+Exact order consistency: 14/30 (46.7%)
+Collapsed order consistency: 14/30 (46.7%)
+Pass 1 versus human: n=30 agreement=76.7% kappa=0.5333
+Pass 2 versus human: n=30 agreement=63.3% kappa=0.3125
+Order-consistent consensus versus human: n=14 agreement=92.9% kappa=0.8372
+
+3x3 consensus matrix (rows=human, columns=judge):
+                          Judge: Original  ...  Judge: Ambiguous/neither
+Human: Original                         4  ...                         0
+Human: Alternative                      0  ...                         0
+Human: Ambiguous/neither                0  ...                         0
+
+[3 rows x 3 columns]
+
+Total runtime: 460.51 seconds
+Public results: /workspaces/comp8240-confident-learning/data/processed/agnews_qwen_judge_results.csv
+Summary: /workspaces/comp8240-confident-learning/results/agnews_qwen_judge_summary.json
+Matrix: /workspaces/comp8240-confident-learning/results/agnews_qwen_judge_matrix.csv
+Chart: /workspaces/comp8240-confident-learning/results/agnews_qwen_judge_agreement.png
+Hashes: /workspaces/comp8240-confident-learning/results/agnews_qwen_judge_hashes.txt
+Private raw-text output: /workspaces/comp8240-confident-learning/data/raw/agnews_qwen_judge_private.csv

@@ -168,56 +168,6 @@ The full-dataset run identified 2,832 of the 4,505 aggregate-label disagreements
 
 The first attempt used two PyTorch data-loader workers and failed because the Codespace had insufficient shared memory. The successful configuration used zero worker processes and one cross-validation job. The initial successful CPU run took 585.58 seconds, including 537.18 seconds to construct a 74.24 MiB feature cache. Peak process memory was approximately 1,296 MiB. A second execution loaded the cache and completed in 43.38 seconds. All hashed deterministic outputs matched exactly across the two successful executions.
 
-### AG News classifier comparison
-
-A follow-up experiment tested whether the classifier used to generate
-out-of-sample probabilities affects Confident Learning performance. The
-comparison used the same 10,000 AG News articles, fixed outer
-cross-validation folds, 20% corruption rate, cyclic and symmetric noise,
-and corruption seeds 42, 43 and 44. Three TF--IDF classifiers were
-evaluated:
-
-- logistic regression;
-- Complement Naive Bayes; and
-- a linear support-vector machine calibrated using sigmoid calibration.
-
-This produced 18 controlled runs. Cleanlab and the simpler
-argmax-disagreement baseline were evaluated in every run. The table below
-reports the mean Cleanlab results across the three corruption seeds.
-
-| Classifier | Noise structure | F1 mean ± SD | MCC mean ± SD | Average precision | Clean-label accuracy |
-|---|---|---:|---:|---:|---:|
-| Logistic regression | Cyclic | 0.801 ± 0.006 | 0.750 ± 0.007 | 0.730 | 0.856 |
-| Logistic regression | Symmetric | 0.817 ± 0.008 | 0.770 ± 0.010 | 0.894 | 0.869 |
-| Complement Naive Bayes | Cyclic | 0.838 ± 0.003 | 0.797 ± 0.003 | 0.819 | 0.881 |
-| Complement Naive Bayes | Symmetric | 0.834 ± 0.002 | 0.791 ± 0.003 | 0.890 | 0.885 |
-| Calibrated linear SVM | Cyclic | 0.777 ± 0.006 | 0.720 ± 0.008 | 0.724 | 0.842 |
-| Calibrated linear SVM | Symmetric | 0.802 ± 0.003 | 0.752 ± 0.004 | 0.868 | 0.854 |
-
-Complement Naive Bayes achieved the highest mean Cleanlab F1 and MCC
-under both noise structures. This indicates that the classifier supplying
-the predicted probabilities can materially affect label-error detection.
-It does not establish that Complement Naive Bayes is generally superior,
-because this comparison uses one dataset, one text representation, one
-noise rate and three corruption seeds.
-
-The six logistic-regression configurations exactly matched their
-corresponding results in the earlier 24-run sensitivity study. A complete
-second execution produced identical hashes for all deterministic outputs.
-
-Generated files are:
-
-- `scripts/agnews_classifier_comparison.py`
-- `results/agnews_classifier_comparison_runs.csv`
-- `results/agnews_classifier_comparison_aggregate.csv`
-- `results/agnews_classifier_comparison_summary.json`
-- `results/agnews_classifier_comparison.png`
-- `results/agnews_classifier_comparison_hashes.txt`
-- `results/agnews_classifier_comparison_hashes_run1.txt`
-- `results/agnews_classifier_comparison_hashes_run2.txt`
-- `results/agnews_classifier_comparison_output.txt`
-- `results/agnews_classifier_comparison_output_run2.txt`
-
 ### Limitations
 
 All five human-label sets were compared on the fixed 5,000-image subset, but only the aggregate label set was evaluated on all 50,000 images. The experiments use one feature extractor, one classifier, one image resolution and one random seed. They establish execution feasibility and provide a controlled comparison, but they do not constitute a comprehensive CIFAR-10N benchmark or a reproduction of the original paper's deep-training experiments.
@@ -512,6 +462,110 @@ Additional generated files are:
 - `results/agnews_human_llm_agreement_summary.json`
 - `results/agnews_human_llm_agreement.png`
 - `results/agnews_human_llm_agreement_hashes.txt`
+
+### Formal order-controlled LLM judge
+
+A formal LLM-judge pilot evaluated the same 30 disputed AG News cases
+using the named open model `Qwen/Qwen2.5-0.5B-Instruct`, pinned to revision
+`7ae557604adf67be50417f59c2c2f167def9a775`. The judge was treated as a
+supplementary evaluator rather than ground truth.
+
+Each article was judged twice. Candidate order was deterministically
+randomised in the first pass and exactly reversed in the second pass.
+Greedy decoding was used with sampling disabled. The model could select
+Candidate A, Candidate B, ambiguous, or neither. Its decisions were mapped
+to the pre-specified original, alternative and ambiguous/neither
+categories and compared with the blind human review.
+
+| Measure | Result |
+|---|---:|
+| Valid outputs, pass 1 | 30/30 (100.0%) |
+| Valid outputs, pass 2 | 30/30 (100.0%) |
+| Order-consistent cases | 14/30 (46.7%) |
+| Pass-1 human agreement | 76.7% |
+| Pass-1 Cohen's kappa | 0.5333 |
+| Pass-2 human agreement | 63.3% |
+| Pass-2 Cohen's kappa | 0.3125 |
+| Human agreement among order-consistent cases | 13/14 (92.9%) |
+| Consensus-subset Cohen's kappa | 0.8372 |
+
+Although every response followed the requested output format, only 46.7%
+of decisions remained unchanged after candidate order was reversed. This
+reveals substantial position sensitivity. The 92.9% agreement applies
+only to the 14 order-consistent cases and must not be interpreted as
+overall judge accuracy because it is calculated on a selected subset.
+The experiment therefore supports using this small LLM as a supplementary
+reviewer only, with order reversal and human verification, rather than as
+an autonomous source of ground truth.
+
+The complete experiment was executed twice using the cached pinned model.
+All deterministic output hashes matched exactly. Raw article text and raw
+model responses remain in the ignored `data/raw/` directory.
+
+Generated files are:
+
+- `scripts/agnews_qwen_judge.py`
+- `results/agnews_qwen_judge_prompt.txt`
+- `results/agnews_qwen_judge_protocol.json`
+- `data/processed/agnews_qwen_judge_results.csv`
+- `results/agnews_qwen_judge_matrix.csv`
+- `results/agnews_qwen_judge_summary.json`
+- `results/agnews_qwen_judge_agreement.png`
+- `results/agnews_qwen_judge_hashes.txt`
+- `results/agnews_qwen_judge_hashes_run1.txt`
+- `results/agnews_qwen_judge_hashes_run2.txt`
+- `results/agnews_qwen_judge_output.txt`
+- `results/agnews_qwen_judge_output_run2.txt`
+
+### AG News classifier comparison
+
+A follow-up experiment tested whether the classifier used to generate
+out-of-sample probabilities affects Confident Learning performance. The
+comparison used the same 10,000 AG News articles, fixed outer
+cross-validation folds, 20% corruption rate, cyclic and symmetric noise,
+and corruption seeds 42, 43 and 44. Three TF--IDF classifiers were
+evaluated:
+
+- logistic regression;
+- Complement Naive Bayes; and
+- a linear support-vector machine calibrated using sigmoid calibration.
+
+This produced 18 controlled runs. Cleanlab and the simpler
+argmax-disagreement baseline were evaluated in every run. The table below
+reports the mean Cleanlab results across the three corruption seeds.
+
+| Classifier | Noise structure | F1 mean ± SD | MCC mean ± SD | Average precision | Clean-label accuracy |
+|---|---|---:|---:|---:|---:|
+| Logistic regression | Cyclic | 0.801 ± 0.006 | 0.750 ± 0.007 | 0.730 | 0.856 |
+| Logistic regression | Symmetric | 0.817 ± 0.008 | 0.770 ± 0.010 | 0.894 | 0.869 |
+| Complement Naive Bayes | Cyclic | 0.838 ± 0.003 | 0.797 ± 0.003 | 0.819 | 0.881 |
+| Complement Naive Bayes | Symmetric | 0.834 ± 0.002 | 0.791 ± 0.003 | 0.890 | 0.885 |
+| Calibrated linear SVM | Cyclic | 0.777 ± 0.006 | 0.720 ± 0.008 | 0.724 | 0.842 |
+| Calibrated linear SVM | Symmetric | 0.802 ± 0.003 | 0.752 ± 0.004 | 0.868 | 0.854 |
+
+Complement Naive Bayes achieved the highest mean Cleanlab F1 and MCC
+under both noise structures. This indicates that the classifier supplying
+the predicted probabilities can materially affect label-error detection.
+It does not establish that Complement Naive Bayes is generally superior,
+because this comparison uses one dataset, one text representation, one
+noise rate and three corruption seeds.
+
+The six logistic-regression configurations exactly matched their
+corresponding results in the earlier 24-run sensitivity study. A complete
+second execution produced identical hashes for all deterministic outputs.
+
+Generated files are:
+
+- `scripts/agnews_classifier_comparison.py`
+- `results/agnews_classifier_comparison_runs.csv`
+- `results/agnews_classifier_comparison_aggregate.csv`
+- `results/agnews_classifier_comparison_summary.json`
+- `results/agnews_classifier_comparison.png`
+- `results/agnews_classifier_comparison_hashes.txt`
+- `results/agnews_classifier_comparison_hashes_run1.txt`
+- `results/agnews_classifier_comparison_hashes_run2.txt`
+- `results/agnews_classifier_comparison_output.txt`
+- `results/agnews_classifier_comparison_output_run2.txt`
 
 ### Limitations
 

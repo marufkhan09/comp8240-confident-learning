@@ -1,0 +1,38 @@
+{
+  "experiment": "Formal order-controlled AG News LLM-judge pilot",
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "model_role": "Supplementary semantic judge, not ground truth",
+  "cases": 30,
+  "passes_per_case": 2,
+  "total_prompts": 60,
+  "order_seed": 20261008,
+  "generation_seed": 42,
+  "pass_1_order": "Deterministically randomised candidate order",
+  "pass_2_order": "Exact reversal of pass 1 candidate order",
+  "decoding": "Greedy decoding; sampling disabled; one beam",
+  "allowed_choices": [
+    "A",
+    "B",
+    "AMBIGUOUS",
+    "NEITHER"
+  ],
+  "comparison_mapping": {
+    "A": "Role assigned to candidate A",
+    "B": "Role assigned to candidate B",
+    "AMBIGUOUS": "ambiguous_neither",
+    "NEITHER": "ambiguous_neither",
+    "unparseable": "invalid"
+  },
+  "human_categories": [
+    "original",
+    "alternative",
+    "ambiguous_neither"
+  ],
+  "privacy": "Raw text and raw model responses remain in data/raw",
+  "python_version": "3.14.2",
+  "pytorch_version": "2.13.0+cpu",
+  "transformers_version": "4.57.1",
+  "scikit_learn_version": "1.9.0",
+  "cleanlab_version": "2.9.0"
+}
