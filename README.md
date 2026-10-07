@@ -132,9 +132,23 @@ Under this evaluation definition, Cleanlab identified 355 of the 466 aggregate-l
 
 The experiment was run twice. The generated JSON summary and all 5,000 CSV prediction records had identical SHA-256 hashes across both executions.
 
+### Five-label-set comparison
+
+The follow-up script `scripts/cifar10n_label_sets_experiment.py` compares all five official CIFAR-10N human-label sets: `aggre_label`, `worse_label` and the three individual annotator sets. Every comparison uses the same 5,000 images, cached 512-dimensional ResNet-18 features and four cross-validation folds. The folds are defined once using the aggregate labels and then held fixed across all label sets.
+
+| Label set | Actual errors | Flagged | Precision | Recall | F1 | MCC | Average precision | Clean-label accuracy |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Aggregate | 466 | 1,431 | 0.248 | 0.762 | 0.374 | 0.337 | 0.427 | 0.692 |
+| Worst-case | 2,023 | 2,879 | 0.565 | 0.805 | 0.664 | 0.382 | 0.708 | 0.470 |
+| Annotator 1 | 874 | 2,066 | 0.342 | 0.808 | 0.480 | 0.369 | 0.564 | 0.601 |
+| Annotator 2 | 908 | 2,094 | 0.359 | 0.827 | 0.500 | 0.390 | 0.581 | 0.604 |
+| Annotator 3 | 905 | 2,205 | 0.348 | 0.849 | 0.494 | 0.386 | 0.560 | 0.584 |
+
+The aggregate-label result exactly reproduces the earlier pilot counts. Recall remained between 0.762 and 0.849 across the five label sets. The worst-case set produced the highest F1 but also had a much higher error prevalence of 40.46%, compared with 9.32% for the aggregate labels. Consequently, its higher precision and F1 should not be interpreted by themselves as evidence of better detection. MCC remained within a narrower range of 0.337 to 0.390. Accuracy against the clean reference labels declined to 0.470 for the worst-case labels, compared with 0.692 for the aggregate labels.
+
 ### Limitations
 
-This is a preliminary CPU-feasible experiment using one deterministic 5,000-image subset, one label set, reduced image resolution, frozen ResNet-18 features and logistic regression. Its results should not be treated as a full-dataset benchmark or as a reproduction of the original paper. Further experiments should evaluate all 50,000 examples, additional CIFAR-10N label sets, alternative classifiers and multiple random seeds.
+This remains a CPU-feasible experiment using one deterministic 5,000-image subset, reduced image resolution, frozen ResNet-18 features and logistic regression. All five human-label sets are now evaluated under fixed folds, but the results should not be treated as a full-dataset benchmark or as a reproduction of the original paper. Further work should evaluate all 50,000 images, alternative classifiers and multiple subset or training seeds.
 
 ### Generated files
 
@@ -145,6 +159,12 @@ This is a preliminary CPU-feasible experiment using one deterministic 5,000-imag
 - `results/cifar10n_hashes_run1.txt`: first-run artifact hashes
 - `results/cifar10n_hashes_run2.txt`: repeated-run artifact hashes
 - `results/cifar10n_source_commit.txt`: exact CIFAR-10N source revision
+- `scripts/cifar10n_label_sets_experiment.py`: fixed-subset five-label-set comparison
+- `results/cifar10n_label_sets_results.csv`: label-set-level metrics
+- `results/cifar10n_label_sets_predictions.csv`: 25,000 per-example prediction records
+- `results/cifar10n_label_sets_summary.json`: experiment metadata and results
+- `results/cifar10n_label_sets_metrics.png`: comparison chart
+- `results/cifar10n_label_sets_hashes.txt`: reproducibility hashes
 
 
 ## Paper-artifact compatibility reproduction
