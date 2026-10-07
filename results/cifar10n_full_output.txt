@@ -1,0 +1,54 @@
+Extracting frozen ResNet-18 features for 50,000 images...
+  Processed batch 25/391
+  Processed batch 50/391
+  Processed batch 75/391
+  Processed batch 100/391
+  Processed batch 125/391
+  Processed batch 150/391
+  Processed batch 175/391
+  Processed batch 200/391
+  Processed batch 225/391
+  Processed batch 250/391
+  Processed batch 275/391
+  Processed batch 300/391
+  Processed batch 325/391
+  Processed batch 350/391
+  Processed batch 375/391
+  Processed batch 391/391
+Saved full embedding cache: /workspaces/comp8240-confident-learning/data/raw/cifar10n_resnet18_n50000_size96.npz
+Feature extraction time: 537.18 seconds
+
+Generating four-fold full-dataset out-of-sample probabilities...
+
+CIFAR-10N FULL-DATASET RESULTS
+Examples: 50000
+Actual errors: 4505
+Flagged: 5878
+TP/FP/FN/TN: 2832/3046/1673/42449
+Precision: 0.4818
+Recall: 0.6286
+F1: 0.5455
+MCC: 0.4993
+Average precision: 0.6467
+Accuracy against noisy labels: 0.7755
+Accuracy against clean labels: 0.8198
+
+PILOT VERSUS FULL
+      scope  examples  actual_label_errors  suspected_label_issues  precision   recall  f1_score  matthews_correlation_coefficient  average_precision
+Pilot 5,000      5000                  466                    1431   0.248078 0.761803  0.374275                          0.337344           0.426882
+Full 50,000     50000                 4505                    5878   0.481797 0.628635  0.545507                          0.499319           0.646684
+
+RESOURCE SUMMARY
+Feature cache: created
+Feature stage: 537.18 seconds
+Evaluation stage: 41.44 seconds
+Total runtime: 585.58 seconds
+Cache size: 74.24 MiB
+Peak process memory: 1296.18 MiB
+
+Results: /workspaces/comp8240-confident-learning/results/cifar10n_full_results.csv
+Predictions: /workspaces/comp8240-confident-learning/results/cifar10n_full_predictions.csv
+Comparison: /workspaces/comp8240-confident-learning/results/cifar10n_full_vs_pilot.csv
+Summary: /workspaces/comp8240-confident-learning/results/cifar10n_full_summary.json
+Chart: /workspaces/comp8240-confident-learning/results/cifar10n_full_vs_pilot.png
+Hashes: /workspaces/comp8240-confident-learning/results/cifar10n_full_hashes.txt

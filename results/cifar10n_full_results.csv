@@ -1,0 +1,2 @@
+scope,examples,actual_label_errors,suspected_label_issues,true_positives,false_positives,false_negatives,true_negatives,precision,recall,f1_score,matthews_correlation_coefficient,average_precision,error_prevalence,precision_lift_over_prevalence,accuracy_against_noisy_labels,accuracy_against_clean_labels
+"Full 50,000",50000,4505,5878,2832,3046,1673,42449,0.4817965294,0.6286348502,0.5455070789,0.4993185392,0.6466840556,0.0901000000,5.3473532678,0.7755000000,0.8198400000

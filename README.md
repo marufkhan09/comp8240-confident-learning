@@ -146,9 +146,31 @@ The follow-up script `scripts/cifar10n_label_sets_experiment.py` compares all fi
 
 The aggregate-label result exactly reproduces the earlier pilot counts. Recall remained between 0.762 and 0.849 across the five label sets. The worst-case set produced the highest F1 but also had a much higher error prevalence of 40.46%, compared with 9.32% for the aggregate labels. Consequently, its higher precision and F1 should not be interpreted by themselves as evidence of better detection. MCC remained within a narrower range of 0.337 to 0.390. Accuracy against the clean reference labels declined to 0.470 for the worst-case labels, compared with 0.692 for the aggregate labels.
 
+### Full 50,000-image aggregate-label experiment
+
+The script `scripts/cifar10n_full_experiment.py` extends the aggregate-label experiment to all 50,000 CIFAR-10 training images. It uses the same 96-by-96 preprocessing, frozen ImageNet-pretrained ResNet-18 features, four-fold out-of-sample logistic-regression probabilities and Cleanlab evaluation as the pilot.
+
+| Measure | Pilot 5,000 | Full 50,000 |
+|---|---:|---:|
+| Actual human-label disagreements | 466 | 4,505 |
+| Suspected issues | 1,431 | 5,878 |
+| True positives | 355 | 2,832 |
+| False positives | 1,076 | 3,046 |
+| False negatives | 111 | 1,673 |
+| Precision | 0.2481 | 0.4818 |
+| Recall | 0.7618 | 0.6286 |
+| F1 | 0.3743 | 0.5455 |
+| MCC | 0.3373 | 0.4993 |
+| Average precision | 0.4269 | 0.6467 |
+| Clean-label accuracy | 0.6922 | 0.8198 |
+
+The full-dataset run identified 2,832 of the 4,505 aggregate-label disagreements. Compared with the pilot, precision, F1, MCC, average precision and clean-label accuracy increased, while recall decreased. These differences are associated with the larger training and evaluation sample but should not be interpreted as a causal estimate of dataset-size effects because only one deterministic pilot subset and one modelling pipeline were evaluated.
+
+The first attempt used two PyTorch data-loader workers and failed because the Codespace had insufficient shared memory. The successful configuration used zero worker processes and one cross-validation job. The initial successful CPU run took 585.58 seconds, including 537.18 seconds to construct a 74.24 MiB feature cache. Peak process memory was approximately 1,296 MiB. A second execution loaded the cache and completed in 43.38 seconds. All hashed deterministic outputs matched exactly across the two successful executions.
+
 ### Limitations
 
-This remains a CPU-feasible experiment using one deterministic 5,000-image subset, reduced image resolution, frozen ResNet-18 features and logistic regression. All five human-label sets are now evaluated under fixed folds, but the results should not be treated as a full-dataset benchmark or as a reproduction of the original paper. Further work should evaluate all 50,000 images, alternative classifiers and multiple subset or training seeds.
+All five human-label sets were compared on the fixed 5,000-image subset, but only the aggregate label set was evaluated on all 50,000 images. The experiments use one feature extractor, one classifier, one image resolution and one random seed. They establish execution feasibility and provide a controlled comparison, but they do not constitute a comprehensive CIFAR-10N benchmark or a reproduction of the original paper's deep-training experiments.
 
 ### Generated files
 
@@ -165,6 +187,17 @@ This remains a CPU-feasible experiment using one deterministic 5,000-image subse
 - `results/cifar10n_label_sets_summary.json`: experiment metadata and results
 - `results/cifar10n_label_sets_metrics.png`: comparison chart
 - `results/cifar10n_label_sets_hashes.txt`: reproducibility hashes
+- `scripts/cifar10n_full_experiment.py`: full 50,000-image aggregate-label experiment
+- `results/cifar10n_full_results.csv`: full-dataset metrics
+- `results/cifar10n_full_predictions.csv`: 50,000 per-example predictions
+- `results/cifar10n_full_vs_pilot.csv`: pilot-versus-full comparison
+- `results/cifar10n_full_summary.json`: full-dataset metadata and results
+- `results/cifar10n_full_vs_pilot.png`: comparison chart
+- `results/cifar10n_full_output.txt`: initial successful run log
+- `results/cifar10n_full_output_run2.txt`: cached repeat-run log
+- `results/cifar10n_full_hashes.txt`: current deterministic hashes
+- `results/cifar10n_full_hashes_run1.txt`: first-run hashes
+- `results/cifar10n_full_hashes_run2.txt`: repeat-run hashes
 
 
 ## Paper-artifact compatibility reproduction

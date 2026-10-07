@@ -1,0 +1,3 @@
+scope,examples,actual_label_errors,suspected_label_issues,true_positives,false_positives,false_negatives,true_negatives,precision,recall,f1_score,matthews_correlation_coefficient,average_precision,accuracy_against_noisy_labels,accuracy_against_clean_labels
+"Pilot 5,000",5000,466,1431,355,1076,111,3458,0.2480782669,0.7618025751,0.3742751713,0.3373442494,0.4268815089,0.6634000000,0.6922000000
+"Full 50,000",50000,4505,5878,2832,3046,1673,42449,0.4817965294,0.6286348502,0.5455070789,0.4993185392,0.6466840556,0.7755000000,0.8198400000
