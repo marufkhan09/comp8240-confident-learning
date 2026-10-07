@@ -1,0 +1,44 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+AG NEWS CLASSIFIER COMPARISON
+Source revision: eb185aade064a813bc0b7f42de02595523103ca4
+Fixed subset: 10000
+Clean class counts: [2500, 2500, 2500, 2500]
+Noise rate: 0.2
+Runs: 18
+
+[01/18] logistic_regression_cyclic_s42
+[02/18] logistic_regression_cyclic_s43
+[03/18] logistic_regression_cyclic_s44
+[04/18] logistic_regression_symmetric_s42
+[05/18] logistic_regression_symmetric_s43
+[06/18] logistic_regression_symmetric_s44
+[07/18] complement_naive_bayes_cyclic_s42
+[08/18] complement_naive_bayes_cyclic_s43
+[09/18] complement_naive_bayes_cyclic_s44
+[10/18] complement_naive_bayes_symmetric_s42
+[11/18] complement_naive_bayes_symmetric_s43
+[12/18] complement_naive_bayes_symmetric_s44
+[13/18] calibrated_linear_svm_cyclic_s42
+[14/18] calibrated_linear_svm_cyclic_s43
+[15/18] calibrated_linear_svm_cyclic_s44
+[16/18] calibrated_linear_svm_symmetric_s42
+[17/18] calibrated_linear_svm_symmetric_s43
+[18/18] calibrated_linear_svm_symmetric_s44
+
+LOGISTIC REFERENCE: EXACT MATCH (6/6 RUNS)
+
+AGGREGATE CLASSIFIER RESULTS
+Classifier             Noise      F1±SD       MCC±SD        AP    CleanAcc
+Logistic regression    cyclic    0.801±0.006 0.750±0.007 0.730 0.856
+Logistic regression    symmetric 0.817±0.008 0.770±0.010 0.894 0.869
+Complement NB          cyclic    0.838±0.003 0.797±0.003 0.819 0.881
+Complement NB          symmetric 0.834±0.002 0.791±0.003 0.890 0.885
+Calibrated linear SVM  cyclic    0.777±0.006 0.720±0.008 0.724 0.842
+Calibrated linear SVM  symmetric 0.802±0.003 0.752±0.004 0.868 0.854
+
+Total runtime: 119.32 seconds
+Runs: /workspaces/comp8240-confident-learning/results/agnews_classifier_comparison_runs.csv
+Aggregates: /workspaces/comp8240-confident-learning/results/agnews_classifier_comparison_aggregate.csv
+Summary: /workspaces/comp8240-confident-learning/results/agnews_classifier_comparison_summary.json
+Chart: /workspaces/comp8240-confident-learning/results/agnews_classifier_comparison.png
+Hashes: /workspaces/comp8240-confident-learning/results/agnews_classifier_comparison_hashes.txt

@@ -168,6 +168,56 @@ The full-dataset run identified 2,832 of the 4,505 aggregate-label disagreements
 
 The first attempt used two PyTorch data-loader workers and failed because the Codespace had insufficient shared memory. The successful configuration used zero worker processes and one cross-validation job. The initial successful CPU run took 585.58 seconds, including 537.18 seconds to construct a 74.24 MiB feature cache. Peak process memory was approximately 1,296 MiB. A second execution loaded the cache and completed in 43.38 seconds. All hashed deterministic outputs matched exactly across the two successful executions.
 
+### AG News classifier comparison
+
+A follow-up experiment tested whether the classifier used to generate
+out-of-sample probabilities affects Confident Learning performance. The
+comparison used the same 10,000 AG News articles, fixed outer
+cross-validation folds, 20% corruption rate, cyclic and symmetric noise,
+and corruption seeds 42, 43 and 44. Three TF--IDF classifiers were
+evaluated:
+
+- logistic regression;
+- Complement Naive Bayes; and
+- a linear support-vector machine calibrated using sigmoid calibration.
+
+This produced 18 controlled runs. Cleanlab and the simpler
+argmax-disagreement baseline were evaluated in every run. The table below
+reports the mean Cleanlab results across the three corruption seeds.
+
+| Classifier | Noise structure | F1 mean ± SD | MCC mean ± SD | Average precision | Clean-label accuracy |
+|---|---|---:|---:|---:|---:|
+| Logistic regression | Cyclic | 0.801 ± 0.006 | 0.750 ± 0.007 | 0.730 | 0.856 |
+| Logistic regression | Symmetric | 0.817 ± 0.008 | 0.770 ± 0.010 | 0.894 | 0.869 |
+| Complement Naive Bayes | Cyclic | 0.838 ± 0.003 | 0.797 ± 0.003 | 0.819 | 0.881 |
+| Complement Naive Bayes | Symmetric | 0.834 ± 0.002 | 0.791 ± 0.003 | 0.890 | 0.885 |
+| Calibrated linear SVM | Cyclic | 0.777 ± 0.006 | 0.720 ± 0.008 | 0.724 | 0.842 |
+| Calibrated linear SVM | Symmetric | 0.802 ± 0.003 | 0.752 ± 0.004 | 0.868 | 0.854 |
+
+Complement Naive Bayes achieved the highest mean Cleanlab F1 and MCC
+under both noise structures. This indicates that the classifier supplying
+the predicted probabilities can materially affect label-error detection.
+It does not establish that Complement Naive Bayes is generally superior,
+because this comparison uses one dataset, one text representation, one
+noise rate and three corruption seeds.
+
+The six logistic-regression configurations exactly matched their
+corresponding results in the earlier 24-run sensitivity study. A complete
+second execution produced identical hashes for all deterministic outputs.
+
+Generated files are:
+
+- `scripts/agnews_classifier_comparison.py`
+- `results/agnews_classifier_comparison_runs.csv`
+- `results/agnews_classifier_comparison_aggregate.csv`
+- `results/agnews_classifier_comparison_summary.json`
+- `results/agnews_classifier_comparison.png`
+- `results/agnews_classifier_comparison_hashes.txt`
+- `results/agnews_classifier_comparison_hashes_run1.txt`
+- `results/agnews_classifier_comparison_hashes_run2.txt`
+- `results/agnews_classifier_comparison_output.txt`
+- `results/agnews_classifier_comparison_output_run2.txt`
+
 ### Limitations
 
 All five human-label sets were compared on the fixed 5,000-image subset, but only the aggregate label set was evaluated on all 50,000 images. The experiments use one feature extractor, one classifier, one image resolution and one random seed. They establish execution feasibility and provide a controlled comparison, but they do not constitute a comprehensive CIFAR-10N benchmark or a reproduction of the original paper's deep-training experiments.
@@ -465,4 +515,4 @@ Additional generated files are:
 
 ### Limitations
 
-The study uses one balanced 10,000-article subset, one TF--IDF logistic-regression classifier, two artificial corruption mechanisms and three corruption seeds. Synthetic errors do not fully represent natural annotation behaviour. The published AG News labels are used as the clean reference but may themselves contain ambiguity or mistakes. The 30-case semantic sample was selected from apparent false positives and contains only one blind human reviewer and one preliminary LLM pass. Its agreement results therefore provide exploratory evidence rather than definitive relabelling or a general estimate of LLM-judge accuracy.
+The study uses one balanced 10,000-article subset, three TF--IDF linear classifiers, two artificial corruption mechanisms and three corruption seeds. Synthetic errors do not fully represent natural annotation behaviour. The published AG News labels are used as the clean reference but may themselves contain ambiguity or mistakes. The 30-case semantic sample was selected from apparent false positives and contains only one blind human reviewer and one preliminary LLM pass. Its agreement results therefore provide exploratory evidence rather than definitive relabelling or a general estimate of LLM-judge accuracy.
