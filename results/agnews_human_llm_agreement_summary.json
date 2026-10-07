@@ -1,0 +1,24 @@
+{
+  "agreement_count": 22,
+  "cases": 30,
+  "category_order": [
+    "original",
+    "alternative",
+    "ambiguous_neither"
+  ],
+  "cohens_kappa": 0.5555555555555556,
+  "disagreement_count": 8,
+  "human_category_counts": {
+    "alternative": 15,
+    "original": 15
+  },
+  "llm_category_counts": {
+    "alternative": 10,
+    "ambiguous_neither": 6,
+    "original": 14
+  },
+  "mapping_source": "results/agnews_human_llm_agreement_preregistration.json",
+  "privacy": "No raw article text is stored in public outputs.",
+  "raw_agreement": 0.7333333333333333,
+  "study": "AG News blind human versus LLM agreement"
+}

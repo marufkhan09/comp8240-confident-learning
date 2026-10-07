@@ -305,7 +305,7 @@ Mean F1 over the three corruption seeds was:
 | Symmetric | 30% | 0.8504 | 0.8275 |
 | Symmetric | 40% | 0.8468 | 0.8480 |
 
-Cleanlab achieved higher mean F1 in seven of the eight configurations. The exception was 40% symmetric noise, where the simple baseline was marginally higher. Precision at larger noise rates must be interpreted alongside the increased prevalence of erroneous labels; higher precision alone does not necessarily mean that the detector has intrinsically improved.
+Cleanlab achieved higher mean F1 in seven of the eight configurations. At 40% symmetric noise, Cleanlab and the simple baseline were effectively tied within seed-to-seed variation. The results suggest that concentrating corruption into one competing class was substantially more damaging at high noise than spreading it across three alternatives: at 40% noise, Cleanlab's mean F1 was 0.6636 under cyclic corruption and 0.8468 under symmetric corruption. This is an inference from the controlled synthetic experiment rather than a general causal claim. Precision at larger noise rates must also be interpreted alongside the increased prevalence of erroneous labels; higher precision alone does not necessarily mean that the detector has intrinsically improved.
 
 The 20%-cyclic-seed-42 configuration exactly reproduced the original pilot counts: 2,251 flags, 1,701 true positives, 550 false positives and 299 false negatives.
 
@@ -319,6 +319,12 @@ Thirty Cleanlab-flagged examples that were not deliberately corrupted in the ver
 
 Thus, 16 of the 30 sampled apparent false positives were considered potentially questionable. These judgements are exploratory and are not treated as independent human ground truth. Raw article text remains in the ignored `data/raw/` directory; the committed review file contains source indices, SHA-256 hashes, decisions and reasons.
 
+### Blind human--LLM agreement
+
+The same 30 articles were subsequently assessed through an independent blind human review. For each article, the original AG News label and the classifier-supported alternative were randomly assigned to candidates A and B. The reviewer did not see which candidate represented which source and did not see the earlier LLM decision. The mapping from human and LLM responses into the categories `original`, `alternative` and `ambiguous_neither` was recorded before the human review began.
+
+The human and LLM categories agreed on 22 of 30 cases, giving raw agreement of 73.3% and Cohen's kappa of 0.5556. The human reviewer selected the original label in 15 cases and the model-supported alternative in 15 cases. The largest disagreement involved five cases where the human selected the alternative but the LLM had marked the article ambiguous or proposed neither candidate. The positive agreement beyond chance supports using an LLM as a supplementary reviewer, but the disagreement rate shows that it should not replace human inspection.
+
 Additional generated files are:
 
 - `data/processed/agnews_noise_sweep_manifest.csv`
@@ -329,7 +335,15 @@ Additional generated files are:
 - `results/agnews_noise_sweep_summary.json`
 - `results/agnews_noise_sweep_f1.png`
 - `results/agnews_manual_annotation_summary.json`
+- `scripts/agnews_blind_human_review.py`
+- `scripts/agnews_human_llm_agreement.py`
+- `results/agnews_human_llm_agreement_preregistration.json`
+- `data/processed/agnews_human_llm_agreement.csv`
+- `results/agnews_human_llm_agreement_matrix.csv`
+- `results/agnews_human_llm_agreement_summary.json`
+- `results/agnews_human_llm_agreement.png`
+- `results/agnews_human_llm_agreement_hashes.txt`
 
 ### Limitations
 
-The study uses one balanced 10,000-article subset, one TF--IDF logistic-regression classifier, two artificial corruption mechanisms and three corruption seeds. Synthetic errors do not fully represent natural annotation behaviour. The published AG News labels are used as the clean reference but may themselves contain ambiguity or mistakes. The 30-case semantic review is small and LLM-assisted, so it is reported as preliminary evidence rather than definitive relabelling.
+The study uses one balanced 10,000-article subset, one TF--IDF logistic-regression classifier, two artificial corruption mechanisms and three corruption seeds. Synthetic errors do not fully represent natural annotation behaviour. The published AG News labels are used as the clean reference but may themselves contain ambiguity or mistakes. The 30-case semantic sample was selected from apparent false positives and contains only one blind human reviewer and one preliminary LLM pass. Its agreement results therefore provide exploratory evidence rather than definitive relabelling or a general estimate of LLM-judge accuracy.

@@ -1,0 +1,46 @@
+{
+  "study": "AG News blind human versus LLM agreement",
+  "cases": 30,
+  "candidate_order_seed": 8240,
+  "presentation_order_seed": 8241,
+  "human_review_display": {
+    "visible": [
+      "article text",
+      "candidate A",
+      "candidate B"
+    ],
+    "hidden": [
+      "original-label identity",
+      "model-label identity",
+      "earlier LLM decision",
+      "earlier LLM suggested label",
+      "earlier LLM explanation"
+    ],
+    "choices": [
+      "candidate A",
+      "candidate B",
+      "neither",
+      "ambiguous"
+    ]
+  },
+  "primary_three_category_mapping": {
+    "human": {
+      "original candidate": "original",
+      "model candidate": "alternative",
+      "neither": "ambiguous_neither",
+      "ambiguous": "ambiguous_neither"
+    },
+    "llm": {
+      "correct": "original",
+      "incorrect and suggested label equals model label": "alternative",
+      "ambiguous": "ambiguous_neither",
+      "incorrect with a third suggested label": "ambiguous_neither"
+    }
+  },
+  "primary_statistics": [
+    "raw agreement",
+    "Cohen's kappa",
+    "3x3 agreement table"
+  ],
+  "note": "This mapping was written before the independent human review was conducted."
+}
