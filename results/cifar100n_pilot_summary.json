@@ -1,0 +1,43 @@
+{
+  "classifier": "StandardScaler plus logistic regression",
+  "cleanlab_version": "2.9.0",
+  "cross_validation_folds": 4,
+  "cross_validation_jobs": 1,
+  "dataloader_workers": 0,
+  "excluded_arrays": {
+    "clean_coarse_label": "20-class superclass labels; not comparable with 100 fine-class IDs",
+    "noisy_coarse_label": "20-class superclass labels; requires a separate 20-class experiment"
+  },
+  "experiment": "CIFAR-100N balanced pilot",
+  "feature_dimensions": 512,
+  "feature_model": "ImageNet-pretrained ResNet-18",
+  "fine_label_set": "noisy_label",
+  "image_size": 96,
+  "pytorch_version": "2.13.0+cpu",
+  "random_seed": 42,
+  "result": {
+    "accuracy_against_clean_labels": 0.3636,
+    "accuracy_against_noisy_labels": 0.3133,
+    "actual_label_errors": 3954,
+    "average_precision": 0.6919435274410684,
+    "dataset": "CIFAR-100N",
+    "error_prevalence": 0.3954,
+    "f1_score": 0.6498103666245258,
+    "false_negatives": 613,
+    "false_positives": 2988,
+    "label_set": "noisy_label",
+    "matthews_correlation_coefficient": 0.35579338008571254,
+    "number_of_classes": 100,
+    "precision": 0.5278875019750355,
+    "precision_lift_over_prevalence": 1.3350720839024672,
+    "recall": 0.8449671219018715,
+    "subset_size": 10000,
+    "suspected_label_issues": 6329,
+    "true_negatives": 3058,
+    "true_positives": 3341
+  },
+  "scikit_learn_version": "1.9.0",
+  "source_commit": "49df7d8a69e355470c77c1c2f2424916325a394b",
+  "subset_selection": "10,000 examples stratified by clean fine label; exactly 100 per class",
+  "torchvision_version": "0.28.0+cpu"
+}

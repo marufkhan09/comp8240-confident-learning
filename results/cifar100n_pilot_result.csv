@@ -1,0 +1,2 @@
+dataset,label_set,subset_size,number_of_classes,actual_label_errors,suspected_label_issues,true_positives,false_positives,false_negatives,true_negatives,precision,recall,f1_score,matthews_correlation_coefficient,average_precision,error_prevalence,precision_lift_over_prevalence,accuracy_against_noisy_labels,accuracy_against_clean_labels
+CIFAR-100N,noisy_label,10000,100,3954,6329,3341,2988,613,3058,0.5278875020,0.8449671219,0.6498103666,0.3557933801,0.6919435274,0.3954000000,1.3350720839,0.3133000000,0.3636000000

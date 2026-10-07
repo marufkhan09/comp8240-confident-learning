@@ -200,6 +200,72 @@ All five human-label sets were compared on the fixed 5,000-image subset, but onl
 - `results/cifar10n_full_hashes_run2.txt`: repeat-run hashes
 
 
+## CIFAR-100N pilot extension
+
+This experiment extends the evaluation to CIFAR-100N, which provides human noisy labels for the 50,000 CIFAR-100 training images. The official CIFAR-N repository revision is `49df7d8a69e355470c77c1c2f2424916325a394b`.
+
+### Label schema and subset
+
+The official file contains `clean_label` and `noisy_label` arrays for the 100 fine-grained classes, together with clean and noisy coarse-label arrays for 20 superclasses. This experiment evaluates only `noisy_label` against `clean_label`. The coarse arrays are not compared directly with the fine labels because they use a different label space and require a separate 20-class experiment.
+
+A deterministic subset of 10,000 images was selected using random seed 42 and stratification by the clean fine-grained labels. The subset contains exactly 100 images from each of the 100 classes. It contains 3,954 disagreements between the human noisy labels and clean reference labels, corresponding to an error prevalence of 39.54%.
+
+### Method
+
+The script `scripts/cifar100n_pilot.py`:
+
+1. verifies alignment between CIFAR-100 images and CIFAR-100N clean labels;
+2. constructs the balanced 10,000-image subset;
+3. extracts frozen ImageNet-pretrained ResNet-18 features at 96-by-96 resolution;
+4. generates four-fold out-of-sample probabilities using standardised logistic regression;
+5. applies Cleanlab to the official noisy fine-grained labels; and
+6. evaluates detected issues against the supplied clean fine-grained labels.
+
+### Results
+
+| Measure | Result |
+|---|---:|
+| Images | 10,000 |
+| Classes | 100 |
+| Images per class | 100 |
+| Actual human-label disagreements | 3,954 |
+| Suspected issues | 6,329 |
+| True positives | 3,341 |
+| False positives | 2,988 |
+| False negatives | 613 |
+| True negatives | 3,058 |
+| Precision | 0.5279 |
+| Recall | 0.8450 |
+| F1 | 0.6498 |
+| MCC | 0.3558 |
+| Average precision | 0.6919 |
+| Noisy-label accuracy | 0.3133 |
+| Clean-label accuracy | 0.3636 |
+
+Cleanlab recovered 3,341 of the 3,954 known disagreements. Recall was high, but 2,988 reference-correct examples were also flagged. The F1 score should be interpreted alongside the 39.54% error prevalence; MCC provides a more conservative summary of binary detection quality. The relatively low classification accuracies also reflect the more difficult 100-class problem, substantial label noise and the use of frozen features rather than task-specific deep-model training. These results should not be directly ranked against the 10-class CIFAR-10N experiment.
+
+### Feasibility and reproducibility
+
+The initial CPU execution took 161.83 seconds after program startup, including 114.03 seconds for feature extraction. Peak process memory was approximately 983.90 MiB, and the ignored feature cache occupied 14.71 MiB. A cached repeat completed in 52.14 seconds after program startup. The result table, predictions, summary and chart produced identical hashes across both executions.
+
+### Limitations
+
+This is a pilot on one deterministic subset, one random seed, one feature extractor and one classifier. It evaluates the official noisy fine-grained labels but does not test the full 50,000-image dataset, the separate 20-class coarse-label task, alternative classifiers or multiple seeds.
+
+### Generated files
+
+- `scripts/cifar100n_pilot.py`: complete pilot implementation
+- `results/cifar100n_pilot_result.csv`: experiment-level metrics
+- `results/cifar100n_pilot_predictions.csv`: 10,000 per-example records
+- `results/cifar100n_pilot_summary.json`: configuration and results
+- `results/cifar100n_pilot_metrics.png`: metric chart
+- `results/cifar100n_pilot_output.txt`: initial execution log
+- `results/cifar100n_pilot_output_run2.txt`: cached repeat log
+- `results/cifar100n_pilot_hashes.txt`: current hashes
+- `results/cifar100n_pilot_hashes_run1.txt`: initial-run hashes
+- `results/cifar100n_pilot_hashes_run2.txt`: repeat-run hashes
+
+
 ## Paper-artifact compatibility reproduction
 
 The script `scripts/paper_artifact_reproduction.py` uses experimental artifacts released by the Confident Learning paper's authors. The selected CIFAR-10 configuration has 40% intended synthetic label noise and 60% noise-matrix sparsity.

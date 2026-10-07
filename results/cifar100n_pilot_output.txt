@@ -1,0 +1,42 @@
+Extracting frozen ResNet-18 features for 10,000 CIFAR-100 images...
+  Processed batch 10/79
+  Processed batch 20/79
+  Processed batch 30/79
+  Processed batch 40/79
+  Processed batch 50/79
+  Processed batch 60/79
+  Processed batch 70/79
+  Processed batch 79/79
+Saved embedding cache: /workspaces/comp8240-confident-learning/data/raw/cifar100n_resnet18_n10000_size96.npz
+Feature extraction time: 114.03 seconds
+
+Generating four-fold CIFAR-100N out-of-sample probabilities...
+
+CIFAR-100N PILOT RESULTS
+Examples: 10000
+Classes: 100
+Examples per class: 100
+Actual errors: 3954
+Flagged: 6329
+TP/FP/FN/TN: 3341/2988/613/3058
+Precision: 0.5279
+Recall: 0.8450
+F1: 0.6498
+MCC: 0.3558
+Average precision: 0.6919
+Accuracy against noisy labels: 0.3133
+Accuracy against clean labels: 0.3636
+
+RESOURCE SUMMARY
+Feature cache: created
+Feature stage: 114.03 seconds
+Evaluation stage: 44.96 seconds
+Total runtime: 161.83 seconds
+Cache size: 14.71 MiB
+Peak process memory: 983.90 MiB
+
+Result: /workspaces/comp8240-confident-learning/results/cifar100n_pilot_result.csv
+Predictions: /workspaces/comp8240-confident-learning/results/cifar100n_pilot_predictions.csv
+Summary: /workspaces/comp8240-confident-learning/results/cifar100n_pilot_summary.json
+Chart: /workspaces/comp8240-confident-learning/results/cifar100n_pilot_metrics.png
+Hashes: /workspaces/comp8240-confident-learning/results/cifar100n_pilot_hashes.txt
