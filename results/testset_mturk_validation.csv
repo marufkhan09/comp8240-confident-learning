@@ -1,0 +1,8 @@
+dataset_id,dataset,candidates,non_errors,errors,non_agreement,correctable,multi_label,neither,validated_error_percentage_of_candidates,published_counts_exact_match
+mnist,MNIST,100,85,15,2,10,0,3,15.0,True
+cifar10,CIFAR-10,275,221,54,32,18,0,4,19.636363636363637,True
+cifar100,CIFAR-100,2235,1650,585,210,318,20,37,26.174496644295303,True
+caltech256,Caltech-256,2360,1902,458,99,221,115,23,19.406779661016948,True
+imagenet,ImageNet,5440,2524,2916,598,1428,597,293,53.60294117647059,True
+20news,20 Newsgroups,93,11,82,43,22,12,5,88.17204301075269,True
+imdb,IMDB,1310,585,725,552,173,0,0,55.343511450381676,True

@@ -1,0 +1,21 @@
+TEST-SET MTURK VALIDATION REPRODUCTION
+Source commit: 6d5d6b31a13216290afc40e5c6319399c4d15c06
+Rule: fewer than 3 workers selected the given-label category
+
+Dataset         Candidates   Errors  Confirmed   Match
+MNIST                  100       15      15.0%     YES
+CIFAR-10               275       54      19.6%     YES
+CIFAR-100             2235      585      26.2%     YES
+Caltech-256           2360      458      19.4%     YES
+ImageNet              5440     2916      53.6%     YES
+20 Newsgroups           93       82      88.2%     YES
+IMDB                  1310      725      55.3%     YES
+
+Total candidates: 11813
+Total validated errors: 4835
+ALL SEVEN DATASETS: EXACT MATCH
+
+Results: /workspaces/comp8240-confident-learning/results/testset_mturk_validation.csv
+Summary: /workspaces/comp8240-confident-learning/results/testset_mturk_validation_summary.json
+Chart: /workspaces/comp8240-confident-learning/results/testset_mturk_validation.png
+Hashes: /workspaces/comp8240-confident-learning/results/testset_mturk_validation_hashes.txt

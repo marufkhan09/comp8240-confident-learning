@@ -570,3 +570,65 @@ Generated files are:
 ### Limitations
 
 The study uses one balanced 10,000-article subset, three TF--IDF linear classifiers, two artificial corruption mechanisms and three corruption seeds. Synthetic errors do not fully represent natural annotation behaviour. The published AG News labels are used as the clean reference but may themselves contain ambiguity or mistakes. The 30-case semantic sample was selected from apparent false positives and contains only one blind human reviewer and one preliminary LLM pass. Its agreement results therefore provide exploratory evidence rather than definitive relabelling or a general estimate of LLM-judge accuracy.
+
+## Follow-up test-set validation reproduction
+
+The project also reproduces the released Mechanical Turk validation
+counts from the follow-up study
+[Pervasive Label Errors in Test Sets Destabilize Machine Learning
+Benchmarks](https://arxiv.org/abs/2103.14749).
+
+The released human-validation artifacts were obtained from:
+
+- Repository: `https://github.com/cleanlab/label-errors`
+- Source commit: `6d5d6b31a13216290afc40e5c6319399c4d15c06`
+
+This experiment covers seven fully released single-label datasets:
+MNIST, CIFAR-10, CIFAR-100, Caltech-256, ImageNet, 20 Newsgroups and
+IMDB. It reconstructs the paper's validation decision from the released
+crowd-worker votes. An example is considered a validated error when fewer
+than three workers select the supplied `given` label category.
+
+The reproduced counts are:
+
+| Dataset | CL-flagged candidates | Human-validated errors | Confirmation among candidates |
+|---|---:|---:|---:|
+| MNIST | 100 | 15 | 15.0% |
+| CIFAR-10 | 275 | 54 | 19.6% |
+| CIFAR-100 | 2,235 | 585 | 26.2% |
+| Caltech-256 | 2,360 | 458 | 19.4% |
+| ImageNet | 5,440 | 2,916 | 53.6% |
+| 20 Newsgroups | 93 | 82 | 88.2% |
+| IMDB | 1,310 | 725 | 55.3% |
+| **Total** | **11,813** | **4,835** | — |
+
+All seven reconstructed results exactly match Table 2 of the published
+paper. Two executions produced identical hashes for the script, result
+table, summary and chart.
+
+The confirmation percentages above are conditional on an example having
+already been flagged by Confident Learning. They must not be interpreted
+as estimated error rates across the complete datasets.
+
+Run the validation using:
+
+```bash
+python scripts/testset_mturk_validation.py
+sha256sum -c results/testset_mturk_validation_hashes.txt
+```
+
+Generated evidence:
+
+- `results/testset_mturk_validation.csv`
+- `results/testset_mturk_validation_summary.json`
+- `results/testset_mturk_validation.png`
+- `results/testset_mturk_validation_output.txt`
+- `results/testset_mturk_validation_output_run2.txt`
+- `results/testset_mturk_validation_hashes.txt`
+- `results/testset_mturk_validation_hashes_run1.txt`
+- `results/testset_mturk_validation_hashes_run2.txt`
+
+This is an artifact-level reproduction of the released human-validation
+aggregation. It does not claim to retrain every model or reproduce every
+experiment in the follow-up paper.
+

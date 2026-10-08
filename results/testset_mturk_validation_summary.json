@@ -1,0 +1,21 @@
+{
+  "all_published_counts_exact_match": true,
+  "datasets": 7,
+  "experiment": "Released MTurk validation-count reproduction",
+  "source_commit": "6d5d6b31a13216290afc40e5c6319399c4d15c06",
+  "source_file_sha256": {
+    "20news_mturk.json": "0f14cda08aedfa79e883aaf6db43adfbf91b4affd5947cd832b7ccfb2d4dafc4",
+    "caltech256_mturk.json": "36a49d8e2b826d00ef9078ce81954d3f4134c41e07b36a9d8f2633802532bc73",
+    "cifar100_mturk.json": "b2b4fedc433e814c64fb33eff99976bbeee6355470e127b56d64bc5fb57493c0",
+    "cifar10_mturk.json": "81b2c16c9eee060d6cc2390f6bbce1e0e7be0a050574be5177c9428f3596b5b5",
+    "imagenet_mturk.json": "79807852426782eb04ae9fcc38454a53eb744bba8ac3213a4d290cfa973995f2",
+    "imdb_mturk.json": "80c15f04208276a4433b8f3d76405203487e38e95397709f762133fa10e82486",
+    "mnist_mturk.json": "448bd00fc9df262c68d50d48709d7fa3d5dc966bc66580e5df20e0dcba6e5612"
+  },
+  "source_paper": "https://arxiv.org/abs/2103.14749",
+  "source_repository": "https://github.com/cleanlab/label-errors",
+  "total_candidates": 11813,
+  "total_validated_errors": 4835,
+  "validation_rule": "Fewer than 3 workers selected the given category",
+  "vote_schema_note": "Released category tallies are not universally additive"
+}
