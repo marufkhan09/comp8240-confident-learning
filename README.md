@@ -4,6 +4,47 @@ This repository supports a COMP8240 novel project based on:
 
 > Northcutt, C. G., Jiang, L., and Chuang, I. L. (2021). *Confident Learning: Estimating Uncertainty in Dataset Labels.* Journal of Artificial Intelligence Research, 70, 1373–1411.
 
+## Quickstart
+
+The report's results come from the scripts below. Each script writes its outputs and a SHA-256 hash list to `results/`, so a rerun can be checked with `sha256sum -c results/<name>_hashes.txt`.
+
+### 1. Setup (Python 3.12, CPU only)
+
+```bash
+git clone https://github.com/marufkhan09/comp8240-confident-learning.git
+cd comp8240-confident-learning
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+mkdir -p external
+git clone https://github.com/cgnorthcutt/confidentlearning-reproduce.git external/confidentlearning-reproduce
+git -C external/confidentlearning-reproduce checkout 2f3155636663eb0813363dc06cd822aae6526c34
+```
+
+### 2. Experiments, in report order
+
+| Report section | Command | Extra download | Approx. CPU time |
+|---|---|---|---|
+| Replication, stages 1 and 3 (released masks, cleanlab 2.9.0) | `python scripts/paper_artifact_reproduction.py` | none | 2 s |
+| Replication, stage 2 (original cleanlab 0.1.0) | see [Original-code regeneration](#original-code-regeneration-cleanlab-010) | legacy environment | 1 s |
+| CIFAR-10N pilot | `python scripts/cifar10n_experiment.py` | CIFAR-10 images, CIFAR-N labels (see [Data acquisition](#data-acquisition)) | a few minutes |
+| CIFAR-10N five label sets | `python scripts/cifar10n_label_sets_experiment.py` | as above | a few minutes |
+| CIFAR-10N full 50,000 images | `python scripts/cifar10n_full_experiment.py` | as above | ~10 min first run, ~45 s cached |
+| CIFAR-100N pilot | `python scripts/cifar100n_pilot.py` | CIFAR-100 images | ~3 min first run, ~1 min cached |
+| AGNews-CLNoise baseline | `python scripts/agnews_noise_experiment.py` | AG News from Hugging Face | ~30 s |
+| AGNews-CLNoise 24-run sweep | `python scripts/agnews_noise_sweep.py` | AG News | a few minutes |
+| AG News classifier comparison | `python scripts/agnews_classifier_comparison.py` | AG News | a few minutes |
+| Blind human review and agreement | `python scripts/agnews_blind_human_review.py`, then `python scripts/agnews_human_llm_agreement.py` | AG News; needs the private review sheet in `data/raw/` | seconds |
+| Formal Qwen judge | `python scripts/agnews_qwen_judge.py` | Qwen2.5-0.5B-Instruct (~1 GB) | a few minutes |
+| Follow-up test-set validation (supplementary) | `python scripts/testset_mturk_validation.py` | `cleanlab/label-errors` repository (see its section) | seconds |
+
+`scripts/cl_experiment.py` is the early synthetic feasibility test from the proposal stage and is not used in the final report.
+
+### 3. What cannot be regenerated from Git alone
+
+Raw AG News text and the human review sheet are kept in the git-ignored `data/raw/` folder because the AG News licence is listed as unknown. The committed files contain source indices, labels and SHA-256 text hashes instead. Every script that needs the text downloads it again from the pinned Hugging Face revision; only the 30 human decisions themselves cannot be recreated, and their decoded results are committed in `data/processed/`.
+
 ## Preliminary feasibility experiment
 
 The script `scripts/cl_experiment.py` performs a controlled label-error detection experiment.
@@ -330,6 +371,41 @@ The experiment was run twice, producing identical JSON and CSV SHA-256 hashes.
 - `results/paper_artifact_hashes_run1.txt`: first-run hashes
 - `results/paper_artifact_hashes_run2.txt`: repeated-run hashes
 
+
+## Original-code regeneration (cleanlab 0.1.0)
+
+The authors' artifact README states that the paper used cleanlab v0.1.0. `scripts/legacy_cleanlab_regeneration.py` runs the exact calls from the authors' work log (`compute_confident_joint` and `get_noise_indices` with each pruning method) on the released, unmodified float16 probabilities for all 12 released noise/sparsity settings, and compares every regenerated mask with the released `train_mask.npy`.
+
+cleanlab 0.1.0 predates current NumPy, so it runs in a separate Python 3.11 environment:
+
+```bash
+python3.11 -m venv .venv-legacy
+.venv-legacy/bin/pip install -r requirements-legacy.txt
+.venv-legacy/bin/python scripts/legacy_cleanlab_regeneration.py
+```
+
+### Results
+
+| Measure | Result |
+|---|---:|
+| Settings | 12 (noise 20/40/70% × sparsity 0/0.2/0.4/0.6) |
+| Masks compared | 60 (5 methods × 12 settings) |
+| Bit-for-bit identical masks | 45 |
+| Confident-joint mask identical | all 12 settings |
+| 40% noise / 60% sparsity | all 5 masks identical; confident-joint F1 0.8025 |
+| Largest difference in any mask | 9 of 50,000 examples |
+| Largest F1 difference | 0.0002 |
+
+The 15 non-identical masks (7 CL-PBNR, 7 CL-both, 1 argmax) were deterministic across repeated runs, so they are most plausibly tie-breaking effects of the authors' original computing environment. cleanlab 0.1.0 reproduces 0.8025 exactly from the released float16 probabilities. The modern cleanlab 2.9.0 path additionally requires float64 renormalisation, so the script also runs cleanlab 0.1.0 on those renormalised probabilities as a control: this changes only 18 examples (F1 0.8024), whereas cleanlab 2.9.0 differs from the released confident-joint mask on 746 examples (F1 0.7900). Most of the modern difference therefore comes from changes in the library's implementation, not from the data, the normalisation, or the paper.
+
+The script was executed twice with identical output hashes.
+
+### Generated files
+
+- `results/legacy_cleanlab_regeneration.csv`: released and regenerated precision, recall and F1 for every setting and method, with the number of differing examples
+- `results/legacy_cleanlab_regeneration_summary.json`: summary and environment
+- `results/legacy_cleanlab_regeneration_hashes.txt`: SHA-256 hashes
+- `requirements-legacy.txt`: pinned legacy environment
 
 ## Self-created dataset: AGNews-CLNoise
 

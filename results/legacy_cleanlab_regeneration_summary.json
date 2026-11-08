@@ -1,0 +1,22 @@
+{
+  "experiment": "Regenerate released CIFAR-10 masks with cleanlab 0.1.0",
+  "source_commit": "2f3155636663eb0813363dc06cd822aae6526c34",
+  "settings": 12,
+  "masks_compared": 60,
+  "identical_masks": 45,
+  "confident_joint_identical_in_all_settings": true,
+  "max_examples_differing_in_any_mask": 9,
+  "max_abs_f1_difference": 0.0002,
+  "probabilities": "released float16 values, unmodified",
+  "renormalisation_control": {
+    "setting": "40% noise, 60% sparsity, confident joint",
+    "input": "float64 renormalised probabilities (as required by cleanlab 2.9.0)",
+    "f1": 0.8024,
+    "examples_differing_from_released": 18
+  },
+  "environment": {
+    "python": "3.11.18",
+    "cleanlab": "0.1.0",
+    "numpy": "1.23.5"
+  }
+}
