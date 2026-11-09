@@ -70,7 +70,7 @@ out-of-sample predicted probabilities \citep{northcutt2021confident}. CL uses
 class-specific confidence thresholds to count confident disagreements,
 constructs a \emph{confident joint}, and then ranks or prunes suspected label
 issues. The paper makes three claims relevant to this project: (1) under stated
-conditions CL consistently estimates the noisy--true label joint and can
+conditions CL consistently estimates the noisy-true label joint and can
 exactly identify errors; (2) it is not tied to one classifier or modality; and
 (3) removing suspected errors can improve learning with noisy labels. The
 original evaluation combines controlled CIFAR-10 corruption with qualitative
@@ -118,7 +118,7 @@ label transitions. Crucially, cross-validation is used so that an example is
 not judged by a model trained on that same example.
 
 The original paper evaluates three questions. First, on synthetic CIFAR-10
-noise, root mean squared error measures estimation of the known noisy--true
+noise, root mean squared error measures estimation of the known noisy-true
 joint. Second, individual error detection is evaluated by precision, recall,
 and $F_1$ \citep{sokolova2009systematic}:
 \begin{equation}
@@ -261,7 +261,7 @@ released settings, and compares every regenerated mask with the released one.
 
 \emph{Stage 3 (current software).} The five methods were re-run with
 \cleanlab{} 2.9.0 (Python 3.12.1, NumPy 2.5.2, scikit-learn 1.9.0, GitHub
-Codespace). Because the float16 rows sum to 0.9868--1.0000 and the current
+Codespace). Because the float16 rows sum to 0.9868-1.0000 and the current
 library validates its inputs, they were converted to float64 and
 renormalised for this stage only.
 
@@ -358,7 +358,7 @@ $TP=16{,}710$, $FP=4{,}955$, and $FN=3{,}271$, giving $P=0.7713$,
 $R=0.8363$, and $F_1=0.8025$, matching the paper's Table~4 (77\%, 84\%,
 80\%). The paper's Table~4 reports four settings; Table~\ref{tab:paper-table4}
 compares all of them, and every reported $F_1$ is matched after rounding.
-The comparison is restricted to these four noise--sparsity combinations; the
+The comparison is restricted to these four noise-sparsity combinations; the
 remaining eight released configurations (Table~\ref{tab:replication-grid})
 are reported separately and are not presented as replications of a paper
 table. Running the
@@ -462,11 +462,11 @@ Pilot: 5,000 images, stratified on aggregate labels, seed 42; full run: all 50,0
 4. Noisy labels &
 Real: aggregate, worst-case, and three individual annotator label sets &
 Real: official \texttt{noisy\_label} (coarse labels excluded) &
-Injected: exactly $r\times2{,}500$ per class at $r\in\{10,20,30,40\}\%$, cyclic or symmetric, seeds 42--44 \\
+Injected: exactly $r\times2{,}500$ per class at $r\in\{10,20,30,40\}\%$, cyclic or symmetric, seeds 42-44 \\
 5. Representation &
 Resize to 96$\times$96, ImageNet normalisation, frozen ResNet-18 $\rightarrow$ 512-d features (cached) &
 Same as CIFAR-10N &
-TF--IDF, unigrams + bigrams, 30,000 features, sublinear TF \\
+TF-IDF, unigrams + bigrams, 30,000 features, sublinear TF \\
 6. Probabilities &
 Standardised logistic regression, stratified 4-fold out-of-sample, seed 42 &
 Same as CIFAR-10N &
@@ -525,11 +525,11 @@ ambiguity.
 The baseline changes exactly 500 labels per class (2,000 total, or 20\%) using
 the fixed cycle World$\rightarrow$Sports$\rightarrow$Business$\rightarrow$
 Sci/Tech$\rightarrow$World. The follow-up sensitivity study keeps the same
-articles and four folds while varying four noise rates (10--40\%), cyclic
-versus symmetric corruption, and seeds 42--44. This produces 24 controlled
+articles and four folds while varying four noise rates (10-40\%), cyclic
+versus symmetric corruption, and seeds 42-44. This produces 24 controlled
 runs. Symmetric corruption randomly distributes each selected error over the
 other three classes; cyclic corruption concentrates it in one competing class.
-Each run generates four-fold probabilities with a TF--IDF (unigrams and
+Each run generates four-fold probabilities with a TF-IDF (unigrams and
 bigrams, 30,000-feature maximum) logistic-regression pipeline. An argmax
 disagreement rule is included as a simple baseline.
 
@@ -562,8 +562,8 @@ their source datasets rather than being republished.}
 \subsection{Blind annotation and LLM-judge protocol}
 
 Thirty cases were sampled from CL flags that were \emph{not} deliberately
-corrupted in the verified 20\%-cyclic AG News run---apparent false positives
-under the synthetic reference. Sampling was approximately balanced across the
+corrupted in the verified 20\%-cyclic AG News run. Under the synthetic
+reference these are apparent false positives. Sampling was approximately balanced across the
 four source classes. In a blind review, the human annotator saw the article and
 two randomly ordered candidates: the original AG News label and the model's
 alternative. Their roles and earlier model decisions were hidden. The choices
@@ -578,7 +578,7 @@ positives and false negatives are decided by construction.
 Because only one human annotator was available, an independently executed,
 pinned, order-controlled LLM judge was used as a supplementary annotator. This
 follows the unit's permitted LLM-as-judge approach but does not replace a
-human--human reliability study. The judge was Qwen2.5-0.5B-Instruct
+human-human reliability study. The judge was Qwen2.5-0.5B-Instruct
 \citep{qwen2024qwen25}, pinned to revision \texttt{7ae5576}\footnote{Model:
 \url{https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct}.} and run locally.
 It replaced the proposal's tentative Prometheus~2 \citep{kim2024prometheus},
@@ -608,7 +608,7 @@ disagreements with a reference label that may itself be imperfect; AGNews
 errors are synthetic again but in text. (2) \emph{Probability model:} the
 replication uses the authors' four-fold ResNet-50 trained on the noisy
 labels; the image extensions use a frozen ImageNet ResNet-18 with four-fold
-logistic regression, and AGNews uses TF--IDF with four-fold logistic
+logistic regression, and AGNews uses TF-IDF with four-fold logistic
 regression. (3) \emph{Metrics:} the replication reports the paper's $P$,
 $R$, and $F_1$; the extensions add MCC and AP because error prevalence
 varies from 9\% to 40\% across datasets. Holding the CL step fixed while
@@ -620,7 +620,7 @@ ranges from 0.750 to 0.787 across sparsities (Table~\ref{tab:replication-grid}),
 and the constructed AGNews benchmark with 20\% cyclic noise gives a comparable
 $F_1=0.800$. This supports the claim that CL transfers across modalities when
 the noise is synthetic and the classifier is adequate. At 40\% the picture
-splits: CIFAR-10 stays at 0.803--0.842, AGNews symmetric noise is similar
+splits: CIFAR-10 stays at 0.803-0.842, AGNews symmetric noise is similar
 (0.847), but AGNews cyclic noise falls to 0.664 (Section~\ref{sec:sweep}).
 Real human noise is harder: CIFAR-10N and CIFAR-100N reach $F_1$
 of 0.546 and 0.650, mainly through lower precision.
@@ -635,7 +635,7 @@ of 0.546 and 0.650, mainly through lower precision.
 \toprule
 \textbf{Dataset / scope} & \textbf{$n$} & \textbf{Errors} & \textbf{Flags} & \textbf{$P$} & \textbf{$R$} & \textbf{$F_1$} & \textbf{MCC} & \textbf{AP} & \textbf{Clean acc.} \\
 \midrule
-\emph{Replication: CIFAR-10 synthetic} & 50,000 & 19,981 & 21,665 & .771 & .836 & .802 & --- & --- & --- \\
+\emph{Replication: CIFAR-10 synthetic} & 50,000 & 19,981 & 21,665 & .771 & .836 & .802 & - & - & - \\
 \midrule
 CIFAR-10N aggregate pilot & 5,000 & 466 & 1,431 & .248 & .762 & .374 & .337 & .427 & .692 \\
 CIFAR-10N aggregate full & 50,000 & 4,505 & 5,878 & .482 & .629 & .546 & .499 & .647 & .820 \\
@@ -662,7 +662,7 @@ not a causal estimate of the benefit of more data.
 
 Across the five CIFAR-10N label sets, $F_1$ ranged from 0.374 (aggregate,
 9.3\% disagreement prevalence) to 0.664 (worst-case, 40.5\% prevalence), while
-MCC stayed in the narrower 0.337--0.390 range. Thus, the higher $F_1$ for the
+MCC stayed in the narrower 0.337-0.390 range. Thus, the higher $F_1$ for the
 worst-case labels partly reflects that a flagged example is more likely to be
 wrong when errors are common; it does not by itself show easier intrinsic
 detection. CIFAR-100N had high recall (0.845) but modest MCC (0.356), suggesting
@@ -685,7 +685,7 @@ errors are rare.
 \centering
 \includegraphics[width=0.96\textwidth]{figures/agnews_noise_sweep_f1.png}
 \caption{AGNews-CLNoise sensitivity study. Points are means and error bars are
-standard deviations over corruption seeds 42--44. Articles and folds are held
+standard deviations over corruption seeds 42-44. Articles and folds are held
 fixed.}
 \label{fig:agnews-sweep}
 \end{figure*}
@@ -903,7 +903,7 @@ ImageNet & 5,440 & 2,916 & 53.6\% \\
 20 Newsgroups & 93 & 82 & 88.2\% \\
 IMDB & 1,310 & 725 & 55.3\% \\
 \midrule
-Total & 11,813 & 4,835 & --- \\
+Total & 11,813 & 4,835 & - \\
 \bottomrule
 \end{tabular}
 \caption{Exact reproduction of released human-validation counts from the
