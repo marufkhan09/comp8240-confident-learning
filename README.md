@@ -4,6 +4,15 @@ This repository supports a COMP8240 novel project based on:
 
 > Northcutt, C. G., Jiang, L., and Chuang, I. L. (2021). *Confident Learning: Estimating Uncertainty in Dataset Labels.* Journal of Artificial Intelligence Research, 70, 1373–1411.
 
+## Final report
+
+The final report is in [`report/`](report/):
+
+- [`report/COMP8240_Final_Report_Md_Maruf_Khan.pdf`](report/COMP8240_Final_Report_Md_Maruf_Khan.pdf): the submitted PDF
+- `report/main.tex` and `report/references.bib`: LaTeX source (ACL template), with figures in `report/figures/`
+
+The experimental results in the report correspond to commit `e83ff33`. To rebuild the PDF: `cd report && latexmk -pdf main.tex`, or upload the folder to Overleaf.
+
 ## Quickstart
 
 The report's results come from the scripts below. Each script writes its outputs and a SHA-256 hash list to `results/`, so a rerun can be checked with `sha256sum -c results/<name>_hashes.txt`.
