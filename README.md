@@ -37,6 +37,7 @@ git -C external/confidentlearning-reproduce checkout 2f3155636663eb0813363dc06cd
 |---|---|---|---|
 | Replication, stages 1 and 3 (released masks, cleanlab 2.9.0) | `python scripts/paper_artifact_reproduction.py` | none | 2 s |
 | Replication, stage 2 (original cleanlab 0.1.0) | see [Original-code regeneration](#original-code-regeneration-cleanlab-010) | legacy environment | 1 s |
+| Replication, joint-estimation RMSE (paper Table S1) | `python scripts/joint_rmse_reproduction.py` (also runs in the legacy 0.1.0 environment) | none | 5 s |
 | CIFAR-10N pilot | `python scripts/cifar10n_experiment.py` | CIFAR-10 images, CIFAR-N labels (see [Data acquisition](#data-acquisition)) | a few minutes |
 | CIFAR-10N five label sets | `python scripts/cifar10n_label_sets_experiment.py` | as above | a few minutes |
 | CIFAR-10N full 50,000 images | `python scripts/cifar10n_full_experiment.py` | as above | ~10 min first run, ~45 s cached |
