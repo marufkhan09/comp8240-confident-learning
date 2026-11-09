@@ -11,7 +11,7 @@ The final report is in [`report/`](report/):
 - [`report/COMP8240_Final_Report_Md_Maruf_Khan.pdf`](report/COMP8240_Final_Report_Md_Maruf_Khan.pdf): the submitted PDF
 - `report/main.tex` and `report/references.bib`: LaTeX source (ACL template), with figures in `report/figures/`
 
-The experimental results in the report correspond to commit `e83ff33`. To rebuild the PDF: `cd report && latexmk -pdf main.tex`, or upload the folder to Overleaf.
+The experimental results and scripts in the report correspond to commit `8577ccc`. To rebuild the PDF: `cd report && latexmk -pdf main.tex`, or upload the folder to Overleaf.
 
 ## Quickstart
 
