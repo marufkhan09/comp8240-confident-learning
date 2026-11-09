@@ -39,9 +39,11 @@ generalises beyond the paper's synthetic benchmark. Running the original
 five released label-error masks bit-for-bit in the main setting, reproducing the paper's
 confident-joint result exactly (precision 0.771, recall 0.836, $F_1$ 0.802);
 45 of 60 masks across all twelve noise/sparsity settings were identical and
-the rest differed on at most 9 of 50,000 examples. Current \cleanlab{}
+the rest differed on at most 9 of 50,000 examples. The paper's
+joint-estimation RMSE was also reproduced: all 24 values in its
+Table~S1 were matched after rounding. Current \cleanlab{}
 2.9.0 yields $F_1=0.790$ with 98.5\% mask agreement, a measurable
-software-version effect. Extensions used real human annotations from CIFAR-10N and CIFAR-100N,
+software-version effect in the filtering step. Extensions used real human annotations from CIFAR-10N and CIFAR-100N,
 and a new controlled text dataset, AGNews-CLNoise. On the full 50,000-image
 CIFAR-10N aggregate labels, CL achieved $F_1=0.546$; on a balanced 10,000-image
 CIFAR-100N subset it achieved $F_1=0.650$. On AGNews-CLNoise, the original
@@ -133,7 +135,9 @@ noisy-label baselines. The most computationally expensive downstream results
 average ten ResNet-50 trials; those full training trials were outside the CPU
 budget of this project.
 
-On its own benchmark the method was highly successful. For label-error
+On its own benchmark the method was highly successful. For joint estimation
+at 20\% and 40\% noise, CL averaged an RMSE of 0.004 against the true joint,
+versus 0.006 for the simpler confusion-matrix estimate. For label-error
 detection on CIFAR-10, the authors' released confident-joint masks give $F_1$
 between 0.69 and 0.84 across the twelve released noise/sparsity settings,
 including $P=0.771$, $R=0.836$, $F_1=0.8025$ at 40\% noise and 60\% sparsity,
@@ -238,8 +242,9 @@ keep mask, with the outcome relative to the clean label.}
 The replication has three stages, all on the authors' released data at
 artifact commit \texttt{2f31556}; scripts, outputs, and hashes are in the
 public project repository.\footnote{
-\url{https://github.com/marufkhan09/comp8240-confident-learning} (results in
-this report correspond to commit \texttt{e83ff33}).}
+\url{https://github.com/marufkhan09/comp8240-confident-learning}. All
+results and scripts in this report correspond to repository commit
+\texttt{8577ccc}.}
 
 \emph{Stage 1 (evaluate released outputs).} For the 40\%-noise, 60\%-sparsity
 setting (50,000 images; 19,981 actual corruptions, 39.96\%), the script
@@ -260,8 +265,17 @@ Codespace). Because the float16 rows sum to 0.9868--1.0000 and the current
 library validates its inputs, they were converted to float64 and
 renormalised for this stage only.
 
-The scope is deliberately the label-error detection results, not the paper's
-ten-trial ResNet-50 retraining benchmark, which exceeds the CPU budget.
+\emph{Stage 4 (joint estimation).} Following the authors' work log, the
+true joint is the released noise matrix multiplied by the clean-label prior,
+$Q_{\tilde{y},y^*}=P(\tilde{y}\mid y^*)\,P(y^*)$; $\hat{Q}$ is obtained from
+\texttt{estimate\_joint} using either the confident joint or the
+argmax confusion matrix ($C_{\text{confusion}}$), and
+$\text{RMSE}=\big(\frac{1}{m^2}\sum_{i,j}(\hat{Q}_{ij}-Q_{ij})^2\big)^{1/2}$.
+This was run in both environments for all twelve settings.
+
+The scope is deliberately the joint-estimation and label-error detection
+results, not the paper's ten-trial ResNet-50 retraining benchmark, which
+exceeds the CPU budget.
 Reusing the released out-of-sample probabilities isolates CL's counting and
 filtering behaviour, which is the paper's methodological contribution.
 
@@ -375,7 +389,42 @@ its software environment, not with the data, the released masks, the metric
 calculation, or an error in the paper. Reporting all three columns separates repeatability of the artifact,
 reproducibility of the method, and robustness to software change.
 
-All three stages produced identical outputs when re-run. The repository
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrr}
+\toprule
+ & & \multicolumn{4}{c}{\textbf{Sparsity}} \\
+\cmidrule(l){3-6}
+\textbf{Noise} & \textbf{Count} & \textbf{0.0} & \textbf{0.2} & \textbf{0.4} & \textbf{0.6} \\
+\midrule
+\multirow{2}{*}{20\%} & $C_{\tilde{y},y^*}$ & .0042 & .0041 & .0036 & .0037 \\
+ & $C_{\text{confusion}}$ & .0058 & .0056 & .0049 & .0055 \\
+\multirow{2}{*}{40\%} & $C_{\tilde{y},y^*}$ & .0040 & .0043 & .0041 & .0052 \\
+ & $C_{\text{confusion}}$ & .0049 & .0051 & .0055 & .0070 \\
+\multirow{2}{*}{70\%} & $C_{\tilde{y},y^*}$ & .0108 & .0102 & .0146 & .0174 \\
+ & $C_{\text{confusion}}$ & .0112 & .0111 & .0151 & .0192 \\
+\bottomrule
+\end{tabular}
+\caption{RMSE of the estimated joint $\hat{Q}$ (\cleanlab{} v0.1.0, released
+probabilities). All 24 values round to the paper's Appendix Table~S1;
+\cleanlab{} 2.9.0 agrees to within $10^{-5}$.}
+\label{tab:rmse}
+\end{table}
+
+\paragraph{Joint estimation.} Table~\ref{tab:rmse} reproduces the paper's
+first evaluation question. All 24 RMSE values match the paper's Table~S1
+after rounding to three decimals. Averaged over the eight 20\% and 40\%
+settings, the confident joint gives 0.0042 and $C_{\text{confusion}}$ gives
+0.0055, matching the paper's summary values of 0.004 and 0.006. The advantage
+of the confident joint narrows at 70\% noise, as in the paper. Unlike the
+error masks, the estimated joint is essentially unchanged under \cleanlab{}
+2.9.0 (maximum difference $9\times10^{-6}$). This suggests that the 746-example
+mask discrepancy above arises in the modern filtering step rather than in
+counting or calibrating the confident joint.
+
+All four stages produced identical outputs when re-run. The repository
 README's Quickstart lists the command, downloads, and approximate CPU time for
 every experiment in this report, and each script saves its output hashes.
 
@@ -520,14 +569,24 @@ two randomly ordered candidates: the original AG News label and the model's
 alternative. Their roles and earlier model decisions were hidden. The choices
 were candidate A, candidate B, ambiguous, or neither. A three-category mapping
 (original, alternative, ambiguous/neither) and agreement statistics were
-written before the review.
+written before the review. This is narrower than the proposal's plan of
+about 100 cases stratified across TP, FP, FN, and TN. With a single annotator,
+the review effort was concentrated on apparent false positives, the only
+outcome whose correctness the synthetic reference cannot settle; true
+positives and false negatives are decided by construction.
 
 Because only one human annotator was available, an independently executed,
 pinned, order-controlled LLM judge was used as a supplementary annotator. This
 follows the unit's permitted LLM-as-judge approach but does not replace a
 human--human reliability study. The judge was Qwen2.5-0.5B-Instruct
 \citep{qwen2024qwen25}, pinned to revision \texttt{7ae5576}\footnote{Model:
-\url{https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct}.} and run locally. Each case was judged twice: pass~1 used a
+\url{https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct}.} and run locally.
+It replaced the proposal's tentative Prometheus~2 \citep{kim2024prometheus},
+whose 7B+ models were impractical on the available CPU-only Codespace; local
+execution also kept article text away from commercial APIs. The small judge
+was a deliberate CPU-compatible trade-off and may have contributed to the
+position sensitivity reported below; this cannot be isolated without
+comparison to a larger judge. Each case was judged twice: pass~1 used a
 deterministically random candidate order and pass~2 reversed it. The prompt
 defined the four topics, hid label provenance, required A/B/AMBIGUOUS/NEITHER,
 and requested one-sentence justification. Greedy decoding, the exact prompt,
@@ -556,10 +615,14 @@ varies from 9\% to 40\% across datasets. Holding the CL step fixed while
 changing the noise and the model is what allows the comparison in
 Table~\ref{tab:main-results} to test the paper's generality claim.
 
-Against the replicated $F_1=0.802$, the constructed AGNews benchmark at 20\%
-cyclic noise is essentially equal ($F_1=0.800$), supporting the claim that CL
-transfers across modalities when noise is synthetic and the classifier is
-adequate. Real human noise is harder: CIFAR-10N and CIFAR-100N reach $F_1$
+At a matched 20\% noise rate, the replicated CIFAR-10 confident-joint $F_1$
+ranges from 0.750 to 0.787 across sparsities (Table~\ref{tab:replication-grid}),
+and the constructed AGNews benchmark with 20\% cyclic noise gives a comparable
+$F_1=0.800$. This supports the claim that CL transfers across modalities when
+the noise is synthetic and the classifier is adequate. At 40\% the picture
+splits: CIFAR-10 stays at 0.803--0.842, AGNews symmetric noise is similar
+(0.847), but AGNews cyclic noise falls to 0.664 (Section~\ref{sec:sweep}).
+Real human noise is harder: CIFAR-10N and CIFAR-100N reach $F_1$
 of 0.546 and 0.650, mainly through lower precision.
 
 \subsection{Real human annotation noise}
@@ -608,6 +671,7 @@ clean-label classification accuracy (0.364) also makes this 100-class task
 harder for the frozen-feature classifier.
 
 \subsection{Controlled text sensitivity study}
+\label{sec:sweep}
 
 The 20\%-cyclic AG News baseline recovered 1,701 of 2,000 injected errors and
 exactly reproduced the original pilot counts. Across all 24 runs, CL had higher
@@ -769,17 +833,14 @@ cited sources, and accepts responsibility for the final report.
 
 \section{Conclusions and Reflections}
 
-The paper's reported label-error detection results were reproduced. In the
-main 40\%-noise, 60\%-sparsity setting, running the original \cleanlab{}
-v0.1.0 regenerated all five released masks bit-for-bit and produced
-$F_1=0.8025$ on 19,981 corrupted CIFAR-10 labels. Across all twelve released
-settings, 45 of 60 masks were identical, including the confident-joint mask in
-every setting; the remaining masks differed on at most 9 of 50,000 examples.
-Modern \cleanlab{} remains close, but its confident-joint result falls to
-0.7900. The control experiment shows that renormalisation accounts for only 18
-changed decisions, leaving at least 728 differences associated with the modern
-implementation and software environment. The retraining experiments remained
-outside scope.
+Both of the paper's CIFAR-10 estimation results were reproduced from its
+released artifacts. All 20 label-error $F_1$ values in Table~4 and all 24
+joint-estimation RMSE values in Table~S1 were matched after rounding. Running
+the original \cleanlab{} v0.1.0 also regenerated the released masks
+themselves, so the method was reproduced and not only its outputs. Modern
+\cleanlab{} 2.9.0 estimates the same joint but filters differently, lowering
+the confident-joint $F_1$ to 0.790. Only the ten-trial retraining experiments
+remained outside the CPU budget.
 
 The generalisation results are mixed in a useful way. CL remains effective
 across human image annotations and synthetic text corruption, but its precision
